@@ -2,12 +2,8 @@ const twilio = require('twilio');
 const db = require('../db/index');    
 const sgMail     = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-// twilio password - Jamesballanger#12
 // twilio CONFIG *********
-const accountSid = 'AC129efb3cf98ec4ac0b3b2ac61377f9d2'; // Your Account SID from www.twilio.com/console
-const authToken = 'a2da36c53f4635b5f8b2ce963ad0503a';   // Your Auth Token from www.twilio.com/console
-
-const client = new twilio(accountSid, authToken);
+const client = new twilio(process.env.accountSid, process.env.authToken);
 
 module.exports = {
     async sendText() {
@@ -26,7 +22,7 @@ module.exports = {
                         const message = await client.messages.create({
                             body: `${row.title}, ${row.link}, ${row.showtime}`,
                             to: user.number,  // Text this number
-                            from: '14697891866' // From a valid Twilio number
+                            from: process.env.twilioNumber // From a valid Twilio number
                         })
                         console.log(message.sid);            
                     }    
@@ -35,7 +31,7 @@ module.exports = {
                     for(const row of rows) {
                         const msg = {
                             to: user.email,
-                            from: 'PTST Admin <james_ballanger_2@hotmail.com>',
+                            from: `PTST Admin <${process.env.myEmail}>`,
                             subject: 'Todays Independent Screenings Toronto!',
                             text: `${row.title}, ${row.link}, ${row.showtime}`
                         };
