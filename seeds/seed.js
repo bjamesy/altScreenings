@@ -1,6 +1,12 @@
-const cheerio = require('cheerio')
-    , request = require('request')
-    , db      = require('../db/index')
+const cheerio   = require('cheerio')
+    , request   = require('request')
+    // puppeteer scraping - because browser loading the asyncronous javascript that  
+    // loads our calendar data after the html template and therefore not being picked up by cheerio 
+    , puppeteer = require('puppeteer');
+const { 
+    seedScreening,
+    seedTheatre
+} = require('../db/seedQueries');
 
 module.exports = {
     getRoyal() {
@@ -9,117 +15,89 @@ module.exports = {
         request(url, (err, res, html) => {
             if(!err && res.statusCode == 200) {
                 const $ = cheerio.load(html);
-    
-                $('.time_title_wrapper').each((i, el) => {
-                    let screening = {};
-    
-                    let showtime = $(el)
+                
+                let screenings = [];
+                let showtime = [];
+
+                $('.time_title_wrapper').each((i, el) => { 
+                    let time = $(el)
                         .find('.showtime')
                         .text()
                         .replace(/\s\s+/g, '');
-                        screening.showtime = showtime;
+                    showtime.push(time);
                     
                     let title = $(el)
                         .find('.now_playing_title')
                         .children('a')
                         .text()
                         .replace(/\s\s+/g, '');
-                        screening.title = title;
-    
+
                     let link = $(el)
-                        .find('.now_playing_ticket')
+                        .find('.now_playing_title')
                         .children('a')
                         .attr('href')
                         .replace(/\s\s+/g, '');
-                        screening.link = link;
-    
-                    console.log(screening);
-    
-                    async function seedRoyal(screening) {
-                        let sql = 'INSERT INTO screening (title, link, showtime, theatre) VALUES ($1, $2, $3, $4) returning *';
-                        let params = [
-                            screening.title,
-                            screening.link,
-                            screening.showtime,
-                            "the Royal"
-                        ];
                         
-                        db
-                            .query(sql, params)
-                            .then(res => {
-                                console.log(res.rows[0])
-                            })
-                            .catch(err => {
-                                console.log('ERROR:', err)
-                            });
-                    } 
-                    seedRoyal(screening);
-                });
+                    screenings.push({
+                        showtime,
+                        title,
+                        link
+                    })
+                });    
+                if(screenings.length && screenings.length > 0) {
+                    seedScreening(screenings, "the Royal Theatre", url);
+                } else {
+                    seedTheatre("the Royal Theatre", url)
+                }
             }
         })    
-    },
+    },  
     getParadise() {
-        let url = 'http://paradiseonbloor.com';
-    
-        request(url, (err, res, html) => {
-            if(!err && res.statusCode == 200) {
-                const $ = cheerio.load(html);
+        let url = 'http://paradiseonbloor.com/calendar';
+        (async () => {
+            try {
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(url, { waitUntil: 'networkidle2' });
 
-                    $('.showtimes_display').each((i, el) => {
-                        $(el).find('.event-row').each((i, elem) => {
-                            let screening = {};
+                let screenings = await page.evaluate(() => {
+                    let screening = [];
+                    let showtime = [];
 
-                            let showtime = $(elem)
-                                .find('.event-info')
-                                .children('span')
-                                .text()
-                                .replace(/\s\s+/g, '');
-                                screening.showtime = showtime;
-                            console.log('SHOWTIME:', showtime);
+                    let today = document.querySelector('.current-day');
+                    let shows = today.querySelectorAll('.film');
 
-                            let title = $(elem)
-                                .find('.event-title')
-                                .children('a')
-                                .text()
-                                .replace(/\s\s+/g, '');
-                                screening.title = title;
-                            console.log(title);
+                    Array.from(shows).forEach(el => {
+                        let linkDirectory = el.querySelector('.event-link').getAttribute("href");
+                        let linkUrl = "https://paradiseonbloor.com";
+                        let link = linkUrl + linkDirectory;
 
-                            let link = $(elem)
-                                .find('.event-links')
-                                .children('.event-link buy-tickets')
-                                .attr('href')
-                                .replace(/\s\s+/g, '');
-                                screening.link = link;
-                            console.log(link);
+                        let time = el.querySelector('.event-info');
+                        showtime.push(time.querySelector('.list').innerText);
 
-                            console.log('SCREENING', screening);
-                            seedParadise(screening);
+                        let title = el.querySelector('h3[class="event-title"] > a').innerText;
+
+                        screening.push({
+                            title, 
+                            link,
+                            showtime
                         })
-                    });
-    
-                    async function seedParadise(screening) {
-                        let sql = 'INSERT INTO screening (title, link, showtime, theatre) VALUES ($1, $2, $3, $4) returning *';
-                        let params = [
-                            screening.title,
-                            screening.link,
-                            screening.showtime,
-                            "Paradise Theatre"
-                        ];
-                        
-                        db
-                            .query(sql, params)
-                            .then(res => {
-                                console.log(res.rows[0])
-                            })
-                            .catch(err => {
-                                console.log('ERROR:', err)
-                            });
-                    }
-            } else {
-                console.log(res);
+                        showtime = [];
+                    })
+
+                    return screening;
+                });
+                if(screenings.length && screenings.length > 0 ) {
+                    seedScreening(screenings, "Paradise Theatre", url);
+                } else {
+                    seedTheatre("Paradise Theatre", url);
+                } 
+
+                await browser.close();    
+            } catch (err) {
+                console.log('ERROR: ', err);
             }
-        })          
+        })();
     },
     getRevue() {
         let url = 'https://revuecinema.ca/';
@@ -128,55 +106,41 @@ module.exports = {
             if(!err && res.statusCode == 200) {
                 const $ = cheerio.load(html);
 
-                    $('.wpt_listing').each((i, el) => {
-                        $(el).find('.wp_theatre_event').each((i, elem) => {
-                            let screening = {};
+                let screenings = [];
+                let showtime = [];
 
-                            let link = $(elem)
-                                .find('.wp_theatre_event_title')
-                                .children('a')
-                                .attr('href')
-                                .replace(/\s\s+/g, '');
-                            screening.link = link;   
+                $('.wpt_listing').each((i, el) => {
+                    $(el).find('.wp_theatre_event').each((i, elem) => {
+                        let link = $(elem)
+                            .find('.wp_theatre_event_title')
+                            .children('a')
+                            .attr('href')
+                            .replace(/\s\s+/g, '');
 
-                            let title = $(elem)
-                                .find('.wp_theatre_event_title')
-                                .children('a')
-                                .text()
-                                .replace(/\s\s+/g, '');
-                            screening.title = title; 
+                        let title = $(elem)
+                            .find('.wp_theatre_event_title')
+                            .children('a')
+                            .text()
+                            .replace(/\s\s+/g, '');
 
-                            let showtime = $(elem)
-                                .find('.wp_theatre_event_time')
-                                .text()
-                                .replace(/\s\s+/g, '');
-                            screening.showtime = showtime;  
+                        let time = $(elem)
+                            .find('.wp_theatre_event_time')
+                            .text()
+                            .replace(/\s\s+/g, '');
+                        showtime.push(time)
 
-                            console.log('SCREENING', screening);
-                            seedRevue(screening);
-                        });
+                        screenings.push({
+                            title, 
+                            link,
+                            showtime
+                        })
                     });
-    
-                    async function seedRevue(screening) {
-                        let sql = 'INSERT INTO screening (title, link, showtime, theatre) VALUES ($1, $2, $3, $4) returning *';
-                        let params = [
-                            screening.title,
-                            screening.link,
-                            screening.showtime,
-                            "Revue Theatre"
-                        ];
-                        
-                        db
-                            .query(sql, params)
-                            .then(res => {
-                                console.log('RESUULT: ', res.rows[0])
-                            })
-                            .catch(err => {
-                                console.log('ERROR:', err)
-                            });
-                    }
-            } else {
-                console.log(res.statusCode);
+                });
+                if(screenings.length && screenings.length > 0) { 
+                    seedScreening(screenings, "Revue Theatre", url);
+                } else {
+                    seedTheatre("Revue Theatre", url);
+                }
             }
         })          
     },
@@ -187,164 +151,191 @@ module.exports = {
             if(!err && res.statusCode == 200) {
                 const $ = cheerio.load(html);
 
-                let screening = {};
+                let screenings = [];
+                let showtime = [];
 
                 $('tr').each((i, el) => {
                     if (i > 4) return false;
 
-                    let showtime = $(el)
+                    let time = $(el)
                         .children('td')
                         .first()
                         .text()
                         .replace("More", '');
-                    screening.showtime = showtime;    
+                    showtime.push(time);    
                     
                     let link = $(el)
                         .find('td')
                         .children('a')
                         .attr('href')
                         .replace(/\s\s+/g, '');
-                    screening.link = link;    
 
                     let title = $(el)
                         .children('td')
                         .last()
                         .text()
                         .replace(/\s\s+/g, '');
-                    screening.title = title;
-
-                    seedHotdoc(screening);
+                
+                    screenings.push({
+                        title, 
+                        link,
+                        showtime
+                    })
+                    showtime = [];
                 });
-
-                async function seedHotdoc(screening) {
-                    let sql = 'INSERT INTO screening (title, link, showtime, theatre) VALUES ($1, $2, $3, $4) returning *';
-                    let params = [
-                        screening.title,
-                        screening.link,
-                        screening.showtime,
-                        "HotDocs Theatre"
-                    ];
-                    
-                    db
-                        .query(sql, params)
-                        .then(res => {
-                            console.log('RESULT: ', res.rows[0])
-                        })
-                        .catch(err => {
-                            console.log('ERROR:', err)
-                        });
+                if(screenings.length && screenings.length > 0) {
+                    seedScreening(screenings, 'HotDocs Theatre', url);
+                } else {
+                    seedTheatre("HotDocs Theatre", url);
                 }
             }
         })          
     },
     getRegent() {
-        let url = 'http://regenttoronto.com/';
-    
-        request(url, (err, res, html) => {
-            if(!err && res.statusCode == 200) {
-                const $ = cheerio.load(html);
+        let url1 = 'https://www.google.com/search?sxsrf=ACYBGNQPcNkDwCjnzSLbYFtAn7NAPlb7nA%3A1581342561585&ei=YV9BXpieI5GRggeDjpiYDg&q=the+regent+theatre+toronto&oq=the+regent+theatre+toronto&gs_l=psy-ab.3..35i39j0i7i30j0i5i30l2.10400.11006..11157...0.3..0.95.488.6......0....1..gws-wiz.......0i71j0i8i7i30j0i8i7i10i30j0i7i5i30j35i304i39.bJ5GMS0FSPk&ved=0ahUKEwjY0pqNkMfnAhWRiOAKHQMHBuMQ4dUDCAs&uact=5';
+        let url = "http://regenttoronto.com/";
 
-                let screening = {};
-                screening.showtime = [];
-
-                $('.entry-content').each((i, el) => {
-                    let title = $(el)
-                        .find('#movieSynopsis')
-                        .children('a')
-                        .text()
-                        .replace(/\s\s+/g, '');
-                    screening.title = title;    
-
-                    let showtime = $('#m_-7972583467647214213ydpa66b052eyiv2118296373ydpb6177469yiv3711678078ydp8a1e4473yiv5733607446ydp5c7a33e9yiv3975041694yui_3_16_0_ym19_1_1542128414330_8467')
-                        .text();
-                        // .replace('', '');
-                    screening.showtime.push(showtime);
-
-                    seedRegent(screening);
-                })
-
-                async function seedRegent(screening) {
-                    let sql = 'INSERT INTO screening (title, link, showtime, theatre) VALUES ($1, $2, $3, $4) returning *';
-                    let params = [
-                        screening.title,
-                        screening.link,
-                        screening.showtime,
-                        "Regent Theatre"
-                    ];
-                    
-                    db
-                        .query(sql, params)
-                        .then(res => {
-                            console.log('RESULT: ', res.rows[0])
-                        })
-                        .catch(err => {
-                            console.log('ERROR:', err)
-                        });
-                }
-            }
-        })          
-    },
-    getTiff() {
-        let url = 'https://www.tiff.net/';
-    
-        request(url, (err, res, html) => {
-            if(!err && res.statusCode == 200) {
-                const $ = cheerio.load(html);
-
-                let screening = {};
-
-                $('.row').each((i, el) => {
-                    let title  = $(el)
-                        .find('.style__itemTitle___108mZ')
-                        .text()
-                        .replace(/\s\s+/g, '');
-                    console.log(title)
-                })
-
-                async function seedTiff(screening) {
-                    let sql = 'INSERT INTO screening (title, link, showtime, theatre) VALUES ($1, $2, $3, $4) returning *';
-                    let params = [
-                        screening.title,
-                        screening.link,
-                        screening.showtime,
-                        "Tiff Bell Lightbox"
-                    ];
-                    
-                    db
-                        .query(sql, params)
-                        .then(res => {
-                            console.log('RESULT: ', res.rows[0])
-                        })
-                        .catch(err => {
-                            console.log('ERROR:', err)
-                        });
-                }
-            }
-        })          
-    },
-    getTiffy() {
-        const phantom = require('phantom');
- 
-        (async function() {
+        (async () => {
             try {
-                const instance = await phantom.create();
-                const page = await instance.createPage();
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(url1, { waitUntil: 'networkidle2' });
+
+                let screenings = await page.evaluate(() => {
+                    let screening = [];
+
+                    let today = document.querySelector('div[data-date="Today"]');
+
+                    if(today) {
+                        let film = today.querySelectorAll('.lr_c_fcb');
+                    
+                        Array.from(film).forEach(el => {
+                            let showtime = [];
     
-                await page.on('onResourceRequested', function(requestData) {
-                    console.info('Requesting', requestData.url);
-                });
-            
-                const status = await page.open('https://www.tiff.net/calendar');
-                const content = await page.property('content');
-                const $ = cheerio.load(content);
+                            let title = el.querySelector('.vk_bk').innerText;
+                            showtime.push(el.querySelector('.lr_c_stnl').innerText);
     
-                let hey = $('.style__date___3ugzP').text();
-                console.log('BODY : ', hey);
-                
-                await instance.exit();    
+                            screening.push({
+                                title,
+                                showtime
+                            })
+                            showtime = [];
+                        });
+    
+                        return screening;    
+                    }
+                })
+                if(screenings && screenings.length > 0) {
+                    seedScreening(screenings, "Regent Theatre", url);
+                } else {
+                    seedTheatre("Regent Theatre", url);
+                }
+
+                await browser.close();    
             } catch (err) {
-                console.log('ERROR : ', err);
+                console.log('ERROR: ', err);
             }
         })();
+    },
+    getTiff() {
+        let url = 'https://www.tiff.net/calendar';
+        // puppeteer scraping - because browser loading the asyncronous javascript that  
+        // loads our calendar data after the html template and therefore not being picked up by cheerio 
+        (async () => {
+            try {
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                await page.goto(url, { waitUntil: 'networkidle2' });
+                
+                let screenings = await page.evaluate(() => {
+                    let screening = [];
+                    let showtime = [];
+
+                    let today = document.querySelector('div[class="0"]');
+                    let film = today.querySelectorAll('li');
+
+                    Array.from(film).forEach(el => {
+                        let title = el.querySelector('.style__cardTitle___2lyRW').innerText;
+                        let linkDiv = el.querySelector('.style__cardScheduleItems___13OLU > div');
+                        let link = linkDiv.querySelector('.style__link___140bA').getAttribute("href");
+                        // multiple showtimes so have to grab nodelist prior to loooping through 
+                        let times = el.querySelectorAll('.style__screeningButton___22uMG');
+                        Array.from(times).forEach(el => { 
+                            showtime.push(el.innerText);
+                        });
+
+                        if(title !== "!Toronto" && title !== "Film Reference Library Public Hours") {
+                            screening.push({
+                                title, 
+                                link,
+                                showtime
+                            })
+                        }
+                        showtime = [];
+                    });
+                                        
+                    return screening;
+                });
+                if(screenings.length && screenings.length > 0) {
+                    seedScreening(screenings, "Tiff Bell Lightbox", url);
+                } else {
+                    seedTheatre("Tiff Bell Lightbox", url);
+                }
+
+                await browser.close();    
+            } catch (err) {
+                console.log('ERROR: ', err);
+            }
+        })();
+    }, 
+    getCinesphere() {
+        let url = "http://ontarioplace.com/en/cinesphere/";
+
+        request(url, (err, res, html) => {
+            if(!err && res.statusCode == 200) {
+                const $ = cheerio.load(html);
+
+                let screenings = [];
+                let showtime = [];
+
+                let film = $('.cineNowPlaying');
+                let films = $(film).find('.tixLinks');
+
+                if(films.length) {
+                    let title = $(film)
+                        .find('.listpostLink')
+                        .children('a')
+                        .attr('title')
+                        .replace(/\s\s+/g, '');
+
+                    $(films).find('a').each((i, el) => {
+                        let time = $(el)
+                            .find('.btn')
+                            .text()
+                            .replace(/\s\s+/g, '');
+                        showtime.push(time);    
+                    });
+
+                    let link = $(film)
+                        .find('.listpostLink')
+                        .children('a')
+                        .attr('href')
+                        .replace(/\s\s+/g, '');
+
+                    screenings.push({
+                        title,
+                        showtime,
+                        link
+                    })
+                    showtime = [];
+                }
+                
+                if(screenings && screenings.length > 0) {
+                    seedScreening(screenings, "Cinesphere Theatre", url);
+                } else {
+                    seedTheatre("Cinesphere Theatre", url);
+                }
+            }
+        })
     }
 };    

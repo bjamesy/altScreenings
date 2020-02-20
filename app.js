@@ -1,14 +1,50 @@
 require('dotenv').config();
 
 const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const logger = require('morgan');
-
+const express     = require('express');
+const path        = require('path');
+const logger      = require('morgan');
+const schedule    = require('node-schedule');
+const { deleteSeeds } = require('./db/seedQueries');
+const { 
+  getRoyal, 
+  getParadise, 
+  getRevue,
+  getHotDocs,
+  getRegent,
+  getTiff,
+  getCinesphere
+} = require('./seeds/seed');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
+
+// SEED DB from web scrapes 
+// ** 3 times a day **
+const rule = new schedule.RecurrenceRule();
+rule.hour = [3, 7, 16];
+
+const seedSched = schedule.scheduleJob(rule, () => {
+  async function seedDB() {
+    try {
+      // remove seeding
+      await deleteSeeds();
+      // begin seeding
+      await getCinesphere();
+      await getRegent();
+      await getTiff();
+      await getRoyal();
+      await getParadise();
+      await getRevue();
+      await getHotDocs();  
+    } catch(err) {
+      console.log(err);
+    }
+  };
+seedDB();
+});
+seedSched;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
