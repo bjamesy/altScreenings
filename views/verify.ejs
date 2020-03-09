@@ -1,0 +1,17 @@
+<% layout('./layouts/boilerplate') -%>
+
+<form method='POST' action='/users/subscribe/<%= user.verify_token %>?_method=PUT'>
+    <div>
+        <label for="phone number"></label>
+        <input type="number" id="number" name="number" placeholder="phone number">
+    </div>
+    <div>
+        <label for="email"></label>
+        <input type="email" id="email" name="email" placeholder="email" value="<%= user.email %>" required>
+    </div>               
+    <div>
+        <label for="text preferred">Check if text updates preferred</label>
+        <input type="checkbox" name="textUpdate">
+    </div>    
+    <input type="submit">
+</form>

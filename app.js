@@ -3,8 +3,11 @@ require('dotenv').config();
 const createError = require('http-errors');
 const express     = require('express');
 const path        = require('path');
+const engine      = require('ejs-mate');
 const logger      = require('morgan');
 const schedule    = require('node-schedule');
+const session     = require('express-session');
+const methodOverride = require('method-override');
 const { deleteSeeds } = require('./db/seedQueries');
 const { 
   getRoyal, 
@@ -15,10 +18,30 @@ const {
   getTiff,
   getCinesphere
 } = require('./seeds/seed');
+const { dailyUpdate } = require('./db/twilio');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
+
+// CONFIG sessions ! 
+app.use(session({
+  secret: "we the north",
+  resave: false,
+  saveUninitialized: true,
+}));
+
+app.use(function(req, res, next) {
+  // set default page title
+  res.locals.title = 'PTST';
+  // SUCCESS flash message in header
+  res.locals.success = req.session.success || '';
+  delete req.session.success;
+  // ERROR flash message in header
+  res.locals.error = req.session.error || '';
+  delete req.session.error;
+  next();
+})
 
 // SEED DB from web scrapes 
 // ** 3 times a day **
@@ -46,6 +69,12 @@ seedDB();
 });
 seedSched;
 
+// TWILIO
+const sendScreenings = schedule.scheduleJob(rule[1], () => dailyUpdate());
+sendScreenings;
+
+// use ejs-locals for all ejs templates:
+app.engine('ejs', engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -54,6 +83,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

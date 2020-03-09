@@ -1,9 +1,36 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const { getSubscription,
+putSubscription,
+getUnsubscription,
+putUnsubscription,
+postVerification,
+getVerification,
+getPause,
+postPause
+} = require('../controllers/index.js')
+
+// GET verification page
+router.get('/verify/:token', getVerification);
+
+// POST verification
+router.post('/verify', postVerification);
+
+// UPDATE subscription
+router.put('/subscribe/:token', putSubscription);
+
+// GET pause subscription
+router.get('/pause', getPause);
+
+// POST paused subscription
+router.put('/pause', postPause);
+
+// GET cancellation
+// protect this page with a token middleware - token provided in link (email/number)
+router.get('/unsubscribe', getUnsubscription);
+
+// UPDATE cancellation 
+router.put('/unsubscribe', putUnsubscription);
 
 module.exports = router;

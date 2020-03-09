@@ -6,42 +6,54 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const client = new twilio(process.env.accountSid, process.env.authToken);
 
 module.exports = {
-    async sendText() {
+    // daily updates for users 
+    async dailyUpdate () {
         try {
-            let userSql = 'SELECT number, email FROM "user"';
+            // come up with a better QUERY HERE 
             let screeningSql = 'SELECT name, title, link, showtime FROM theatre INNER JOIN screening ON theatre.id = screening.theatre_id ORDER BY name;';
             const { rows } = await db.query(screeningSql);
-            const results = await db.query(userSql);
 
+            let userSql = 'SELECT * FROM "user" WHERE user.paused <= $1';
+            let userParams = [ Date.now() ];
+            const results = await db.query(userSql, userParams);
             const users = results.rows;
             
             for(const user of users) {
-                if(user.number) {
-                    //SMS OPTION
+                if(user.verify_token_expires < user.created_date) {
+                    let sql = 'DELETE FROM "user" WHERE id = $1';
+                    let params = [user.id];
+
+                    await db.query(sql, params);
+                }
+                if(user.textupdate) {
+                    // SMS 
                     for(const row of rows) {
                         const message = await client.messages.create({
-                            body: `${row.title}, ${row.link}, ${row.showtime}`,
-                            to: user.number,  // Text this number
-                            from: process.env.twilioNumber // From a valid Twilio number
+                            body: `${row.name}, ${row.title}, ${row.link}, ${row.showtime}
+                            
+                            Unsubscribe or snooze here: http://${req.headers.host}/users/pause`,
+                            to: user.number,  
+                            from: process.env.twilioNumber 
                         })
                         console.log(message.sid);            
                     }    
                 } else {
-                    // EMAIL OPTION 
+                    // EMAIL  
                     for(const row of rows) {
                         const msg = {
                             to: user.email,
                             from: `PTST Admin <${process.env.myEmail}>`,
                             subject: 'Todays Independent Screenings Toronto!',
-                            text: `${row.title}, ${row.link}, ${row.showtime}`
-                        };
+                            text: `${row.name}, ${row.title}, ${row.link}, ${row.showtime}
+                            
+                            Unsubscribe or snooze here: http://${req.headers.host}/users/pause`
+                        }
                         await sgMail.send(msg);            
-                        console.log(message.sid);            
                     }    
                 }
             }
         } catch (err) {
-            console.log('TEXT ERROR:', err); 
+            console.log('ERROR:', err); 
         }
     }
 }

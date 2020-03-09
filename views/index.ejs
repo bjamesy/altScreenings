@@ -1,77 +1,75 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-  </head>
-  <body>
-    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      <h1 class="display-4"><%= title %></h1>
-      <p class="lead"><i>Get Toronto's daily screenings here at <%= title %></i></p>
-    </div>
+<% layout('./layouts/boilerplate') -%>
+
+<h1>Sign up for email updates: </h1>
+<form method='POST' action='/users/verify'>
+    <div>
+        <label for="email"></label>
+        <input type="email" id="email" name="email" placeholder="email" required>
+    </div>               
+    <input type="submit">
+</form>
+
+<div class="container">
+<% screenings.forEach((screening, i) => { %>
+  <% if((i > 0) && (screening.name == screenings[i - 1].name)) { %> 
+    <% if(screening.title) { %>
+      <div class="card" style="width: 19rem;">
+        <div class="card-body">
+          <h6 class="card-title">
+            <%= screening.title %>
+            <hr>
+          </h6>  
+        <% screening.showtime.forEach(time => { %>
+          <p class="card-text">
+            <%= time %>
+          </p>
+        <% }) %> 
+        <% if(screening.link) { %> 
+          <a class="btn btn-primary" style="position: absolute; bottom: 0;" href="<%= screening.link %>">Buy tickets</a>
+        <% } %> 
+        </div>
+      </div>
+    <% } else { %>
+      <div class="card" style="width: 19rem;">
+        <div class="card-body">
+          <p class="card-text">
+            No screenings at this location today
+          </p>
+        </div>
+      </div>
+    <% } %>
+    <hr>  
+    <br>  
+  <% } else { %>
+    <a href="<%= screening.url %>" class="btn btn-light"><h2><%= screening.name %></h2></a> 
+    <% if(screening.title) { %>
+      <div class="card" style="width: 19rem;">
+        <div class="card-body">
+          <h6 class="card-title">
+            <%= screening.title %>
+            <hr>
+          </h6>  
+        <% screening.showtime.forEach(time => { %>
+          <p class="card-text">
+            <%= time %>
+          </p>
+        <% }) %> 
+        <% if(screening.link) { %> 
+          <a class="btn btn-primary" style="position: absolute; bottom: 0;" href="<%= screening.link %>">Buy tickets</a>
+        <% } %> 
+        </div>
+      </div>
+    <% } else { %>
+      <div class="card" style="width: 19rem;">
+        <div class="card-body">
+          <p class="card-text">
+            No screenings at this location today
+          </p>
+        </div>
+      </div>
+    <% } %>
+    <hr>  
     <br>
-    <div class="container">
-    <% screenings.forEach((screening, i) => { %>
-      <% if((i > 0) && (screening.name == screenings[i - 1].name)) { %> 
-        <% if(screening.title) { %>
-          <div class="card" style="width: 19rem;">
-            <div class="card-body">
-              <h6 class="card-title">
-                <%= screening.title %>
-              </h6>  
-            <% screening.showtime.forEach(time => { %>
-              <p class="card-text">
-                <%= time %>
-              </p>
-            <% }) %> 
-            <% if(screening.link) { %> 
-              <a class="btn btn-primary" style="position: absolute; bottom: 0;" href="<%= screening.link %>">Buy tickets</a>
-            <% } %> 
-            </div>
-          </div>
-        <% } else { %>
-          <div class="card" style="width: 19rem;">
-            <div class="card-body">
-              <p class="card-text">
-                No screenings at this location today
-              </p>
-            </div>
-          </div>
-        <% } %>
-        <hr>  
-        <br>  
-      <% } else { %>
-        <a href="<%= screening.url %>" class="btn btn-light"><h2><%= screening.name %></h2></a> 
-        <% if(screening.title) { %>
-          <div class="card" style="width: 19rem;">
-            <div class="card-body">
-              <h6 class="card-title">
-                <%= screening.title %>
-              </h6>  
-            <% screening.showtime.forEach(time => { %>
-              <p class="card-text">
-                <%= time %>
-              </p>
-            <% }) %> 
-            <% if(screening.link) { %> 
-              <a class="btn btn-primary" style="position: absolute; bottom: 0;" href="<%= screening.link %>">Buy tickets</a>
-            <% } %> 
-            </div>
-          </div>
-        <% } else { %>
-          <div class="card" style="width: 19rem;">
-            <div class="card-body">
-              <p class="card-text">
-                No screenings at this location today
-              </p>
-            </div>
-          </div>
-        <% } %>
-        <hr>  
-        <br>
-      <% } %>  
-    <% }) %> 
-    </div>
-  </body>
-</html>
+  <% } %>  
+<% }) %> 
+</div>

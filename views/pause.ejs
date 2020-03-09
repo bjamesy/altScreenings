@@ -1,0 +1,23 @@
+<% layout('./layouts/boilerplate') -%>
+
+<form method='POST' action='/users/pause?_method=PUT'>
+    <div>
+        <div>
+            <label for="email"></label>
+            <input type="email" id="email" name="email" placeholder="email" required>    
+        </div>
+        <input type="submit" id="week" name="paused" placeholder="week" value="week">
+        <input type="submit" id="month" name="paused" placeholder="month" value="month">
+    </div>                    
+    <div>   
+        <h1>
+            OR:
+        </h1>
+    </div>
+</form>
+<form method='POST' action='/users/unsubscribe?_method=PUT'>
+    <div>
+        <label for="unsubscribe">Unsubscribe</label>
+        <input type="submit" id="email" name="email" placeholder="email">
+    </div>                    
+</form>        

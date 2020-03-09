@@ -284,7 +284,7 @@ module.exports = {
 
                 await browser.close();    
             } catch (err) {
-                console.log('ERROR: ', err);
+                console.log('TIFF: ', err);
             }
         })();
     }, 
