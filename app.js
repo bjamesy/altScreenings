@@ -1,14 +1,17 @@
 require('dotenv').config();
 
-const createError = require('http-errors');
-const express     = require('express');
-const path        = require('path');
-const engine      = require('ejs-mate');
-const logger      = require('morgan');
-const schedule    = require('node-schedule');
-const session     = require('express-session');
-const methodOverride = require('method-override');
+const createError     = require('http-errors');
+const express         = require('express');
+const path            = require('path');
+const engine          = require('ejs-mate');
+const logger          = require('morgan');
+const schedule        = require('node-schedule');
+const session         = require('express-session');
+const methodOverride  = require('method-override');
 const { deleteSeeds } = require('./db/seedQueries');
+const { dailyUpdate } = require('./db/twilio');
+const indexRouter     = require('./routes/index');
+const usersRouter     = require('./routes/users');
 const { 
   getRoyal, 
   getParadise, 
@@ -18,9 +21,6 @@ const {
   getTiff,
   getCinesphere
 } = require('./seeds/seed');
-const { dailyUpdate } = require('./db/twilio');
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 
 const app = express();
 
@@ -48,32 +48,44 @@ app.use(function(req, res, next) {
 const rule = new schedule.RecurrenceRule();
 rule.hour = [3, 7, 16];
 
-const seedSched = schedule.scheduleJob(rule, () => {
-  async function seedDB() {
-    try {
-      // remove seeding
-      await deleteSeeds();
-      // begin seeding
-      await getCinesphere();
-      await getRegent();
-      await getTiff();
-      await getRoyal();
-      await getParadise();
-      await getRevue();
-      await getHotDocs();  
-    } catch(err) {
-      console.log(err);
+async function seedDB() {
+  try {
+    // remove seeding
+    await deleteSeeds();
+    // begin seeding
+    await getCinesphere();
+    await getRegent();
+    await getTiff();
+    await getRoyal();
+    await getParadise();
+    await getRevue();
+    await getHotDocs();  
+  } catch (err) {
+    let error = err.message;
+
+    if(error.includes('Navigation timeout of 30000 ms exceeded')) {
+      console.log('TIMEOUT ERROR', error);
+      seedDB();
     }
-  };
-seedDB();
+    if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+      console.log('querySelectorALL ERROR!!', error);
+      seedDB();
+    }
+    console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', error);
+  }
+};
+
+const seedSched = schedule.scheduleJob(rule, () => {
+  seedDB();
 });
-seedSched;
+// seedSched;
 
 // TWILIO
-const sendScreenings = schedule.scheduleJob(rule[1], () => dailyUpdate());
-sendScreenings;
+// const sendScreenings = schedule.scheduleJob(rule[1], () => dailyUpdate());
+// sendScreenings;
+// dailyUpdate();
 
-// use ejs-locals for all ejs templates:
+// use ejs-locals for all ejs templates:n
 app.engine('ejs', engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

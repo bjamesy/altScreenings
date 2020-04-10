@@ -9,7 +9,6 @@ module.exports = {
     // GET landing page
     async getLanding (req, res, next) {
         try {
-            // https://www.dailycodingproblem.com/ on how to include a subscribe feature on home page 
             let sql = 'SELECT * FROM theatre LEFT OUTER JOIN screening ON theatre.id = screening.theatre_id ORDER BY name';
             const { rows, rowCount } = await db.query(sql);
         
@@ -27,24 +26,29 @@ module.exports = {
     }, 
     // GET verification page 
     async getVerification(req, res, next) {
-        let sql = 'SELECT * FROM "user" WHERE verify_token = $1 AND verify_token_expires > $2';
-        let params = [
-            req.params.token,
-            Date.now()
-        ];
-        const { rows } = await db.query(sql, params);
-
-        const user = rows[0];
-
-        if(!user) {
-            req.session.error = 'Password reset token is invalid or has expired';
-            return res.redirect('/');
-        } 
-
-        return res.render('verify', {
-            title: "Subscribe",
-            user: user
-        });
+        try {
+            let sql = 'SELECT * FROM "user" WHERE verify_token = $1 AND verify_token_expires > $2';
+            let params = [
+                req.params.token,
+                Date.now()
+            ];
+            const { rows } = await db.query(sql, params);
+    
+            const user = rows[0];
+    
+            if(!user) {
+                req.session.error = 'Password reset token is invalid or has expired';
+                return res.redirect('/');
+            } 
+    
+            return res.render('verify', {
+                title: "Subscribe",
+                user: user
+            });    
+        } catch(err) {
+            req.session.error = err;
+            return res.redirect('back');
+        }
     },
     // POST send verification email or text 
     async postVerification (req, res, next) {
@@ -65,8 +69,11 @@ module.exports = {
             const msg = {
                 to: email,
                 from: `PTST Admin <${process.env.myEmail}>`,
-                subject: 'Todays Independent Screenings Toronto!',
-                text: `Clicking this link to complete the verification process: 
+                subject: 'Verify your email!',
+                text: `Hi there,
+
+                Thanks for signing up to Private Screenings Toronto! Before we get started, we just need to confirm this is you.
+                
                 http://${req.headers.host}/users/verify/${token}
 
                 If you did not request this, please ignore this email and your data 
@@ -117,56 +124,121 @@ module.exports = {
                 error = 'A user with that phone number is already registered'
             }            
             req.session.error = error;
-            return res.redirect('/');
+            return res.redirect('back');
         }
     },
-    // GET pause subscription page
-    getPause (req, res, next) {
-        res.render('pause', {
-            title: 'Pause subscription'
-        });
+    // GET edit verify page 
+    getVerifyEdit (req, res, next) {
+        res.render('verifyEdit', {
+            title: 'Verify to edit'
+        })
     },
-    // POST pause subscription
-    async postPause (req, res, next) {
-        let paused; 
+    // POST verify to edit subscirption 
+    async putVerifyEdit (req, res, next) {
+        try {
+            const { email } = req.body;
 
-        if(req.body.paused === 'week') {
-            paused = Date.now() + 604800000;
+            const token = await crypto.randomBytes(20).toString('hex');
+    
+            let sql = 'UPDATE "user" SET created_date = $1, verify_token_expires = $2, verify_token = $3 WHERE email = $4 returning *';
+            let params = [
+                Date.now(),
+                Date.now() + 3600000,
+                token,
+                email
+            ];
+            await db.query(sql, params);
+    
+            const msg = {
+                to: email,
+                from: `PTST Admin <${process.env.myEmail}>`,
+                subject: 'Verify your email!',
+                text: `Hi there,
+    
+                Click the link below to edit your subscription.
+                
+                http://${req.headers.host}/users/editSubscription/${token}
+    
+                If you did not request this, please ignore this email and your data 
+                will be removed.`
+            }
+            await sgMail.send(msg);
+    
+            req.session.success = `Success. 
+            Just one thing: to edit your subscription, we need to verify your email address ${email}.
+            Could you please check your email for a verification link? Thanks!`;
+            res.redirect('/');    
+        } catch (err) {
+            let error = err.message;
+            req.session.error = error;
+            console.log(error);
+            return res.redirect('back');
         }
-        if(req.body.paused === 'month') {
-            paused = Date.now() + 2419200000;
-        }    
-
-        let checkUser = 'SELECT * FROM "user" WHERE email = $1';
-        let checkParams = [req.body.email];
-        const result = await db.query(checkUser, checkParams);
-        const user = result.rows[0];
-
-        if(!user) {
-            req.session.error = 'That email is not in our records';
-            return res.redirect('/');
-        }
-        if(user.verify_token) {
-            req.session.error = 'That email is not yet verified';
-            return res.redirect('/');
-        }
-
-        let sql = 'UPDATE "user" SET paused = $1 WHERE email = $2 returning *';
-        let params = [
-            paused,
-            req.body.email
-        ];
-        const { rows } = await db.query(sql, params);
-
-        req.session.success = `See you in ${ rows[0].paused }`;
-        return res.redirect('/');
     },
-    // GET unsubscription page
-    getUnsubscription (req, res, next) {
-        res.render("unsubscribe", {
-            title: 'Unsubscribe :('
-        });
-    },        
+    // GET edit subscription page
+    async getEditSubscription (req, res, next) {
+        try {
+            const { token } = req.params;
+            let sql = 'SELECT * FROM "user" WHERE verify_token = $1';
+            let params = [
+                token
+            ];
+            const { rows } = await db.query(sql, params);
+            const user = rows[0];
+
+            if(!user) {
+                req.session.error = 'Something went wrong on our end. Your verification link from our email may have expired.';
+                return res.redirect('back');
+            }
+    
+            res.render('editSubscription', {
+                title: 'Edit subscription',
+                user: user
+            });    
+        } catch (err) {
+            console.log(err);
+            req.session.error = err;
+            res.redirect('back');
+        }
+    },
+    // POST edit subscription
+    async putEditSubscription (req, res, next) {
+        try {
+            let paused; 
+
+            if(req.body.paused === 'snooze for a week') {
+                paused = Date.now() + 604800000;
+            }
+            if(req.body.paused === 'snooze for 1 month') {
+                paused = Date.now() + 2419200000;
+            }    
+    
+            let checkUser = 'SELECT * FROM "user" WHERE email = $1';
+            let checkParams = [req.body.email];
+            const result = await db.query(checkUser, checkParams);
+            const user = result.rows[0];
+    
+            if(!user) {
+                req.session.error = 'That email is not in our records';
+                return res.redirect('back');
+            }
+    
+            let sql = 'UPDATE "user" SET paused = $1, created_date = $2 WHERE email = $3 returning *';
+            let params = [
+                paused,
+                Date.now(),
+                req.body.email
+            ];
+            await db.query(sql, params);
+    
+            req.session.success = `Your updates will ${ req.body.paused }`;
+            return res.redirect('/');    
+        } catch (err) {
+            console.log(err);
+            req.session.error = err;
+            res.redirect('back');
+        }
+    },
     // POST unsubscribe
     async putUnsubscription (req, res, next) {
         try {

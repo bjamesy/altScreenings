@@ -1,15 +1,19 @@
 <% layout('./layouts/boilerplate') -%>
 
-<h1>Sign up for email updates: </h1>
-<form method='POST' action='/users/verify'>
-    <div>
-        <label for="email"></label>
-        <input type="email" id="email" name="email" placeholder="email" required>
-    </div>               
-    <input type="submit">
-</form>
+<div style="width: 67%; margin: 5px auto" class="navbar-light bg-light">
+  <h2 style="margin: 15px auto; text-align: center;">Sign up to never miss a hot screening in Toronto</h2> 
+  <p style="text-align: center; margin: 15px auto">Get notified daily of the screenings of private theatres in Toronto, by text or email</p>  
+  <form method='POST' action='/users/verify'>
+    <div style="text-align: center;">
+      <input style="width: 50%; margin: 5px auto;" class="form-control" type="email" id="email" name="email" placeholder="Enter your email..." required>
+      <input style="width: 50%; margin: 5px auto;" class="form-control btn btn-warning" type="submit">
+      <p><i>No spam, ever. Easy unsubscribe.</i></p>
+    </div>
+  </form>
+</div>
+<br>
+<hr>
 
-<div class="container">
 <% screenings.forEach((screening, i) => { %>
   <% if((i > 0) && (screening.name == screenings[i - 1].name)) { %> 
     <% if(screening.title) { %>
@@ -38,7 +42,6 @@
         </div>
       </div>
     <% } %>
-    <hr>  
     <br>  
   <% } else { %>
     <a href="<%= screening.url %>" class="btn btn-light"><h2><%= screening.name %></h2></a> 
@@ -59,7 +62,8 @@
         <% } %> 
         </div>
       </div>
-    <% } else { %>
+    <% } %>
+    <% if(screening.no_screenings) { %>
       <div class="card" style="width: 19rem;">
         <div class="card-body">
           <p class="card-text">
@@ -68,8 +72,6 @@
         </div>
       </div>
     <% } %>
-    <hr>  
     <br>
   <% } %>  
 <% }) %> 
-</div>

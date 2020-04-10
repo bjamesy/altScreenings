@@ -1,0 +1,11 @@
+<% layout('./layouts/boilerplate') -%>
+
+<div style="width: 67%; margin: 5px auto" class="navbar-light bg-light">
+  <h2 style="margin: 15px auto; text-align: center;">Provide email to edit subscription</h2> 
+  <form method='POST' action='/users/verifyEdit'>
+    <div style="text-align: center;">
+      <input style="width: 50%; margin: 5px auto;" class="form-control" type="email" id="email" name="email" placeholder="Enter your email..." required>
+      <input style="width: 50%; margin: 5px auto;" class="form-control btn btn-warning" type="submit">
+    </div>
+  </form>
+</div>

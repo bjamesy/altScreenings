@@ -9,7 +9,7 @@ const {
 } = require('../db/seedQueries');
 
 module.exports = {
-    getRoyal() {
+    getRoyal(next) {
         let url = 'http://theroyal.to/'
     
         request(url, (err, res, html) => {
@@ -45,16 +45,15 @@ module.exports = {
                     })
                 });    
                 if(screenings.length && screenings.length > 0) {
-                    seedScreening(screenings, "the Royal Theatre", url);
+                    seedScreening(screenings, "the Royal Theatre", url, next);
                 } else {
-                    seedTheatre("the Royal Theatre", url)
+                    seedTheatre("the Royal Theatre", url, next)
                 }
             }
         })    
     },  
-    getParadise() {
+    async getParadise(next) {
         let url = 'http://paradiseonbloor.com/calendar';
-        (async () => {
             try {
                 const browser = await puppeteer.launch();
                 const page = await browser.newPage();
@@ -88,18 +87,17 @@ module.exports = {
                     return screening;
                 });
                 if(screenings.length && screenings.length > 0 ) {
-                    seedScreening(screenings, "Paradise Theatre", url);
+                    seedScreening(screenings, "Paradise Theatre", url, next);
                 } else {
-                    seedTheatre("Paradise Theatre", url);
+                    seedTheatre("Paradise Theatre", url, next);
                 } 
 
                 await browser.close();    
             } catch (err) {
-                console.log('ERROR: ', err);
+                next(err);
             }
-        })();
     },
-    getRevue() {
+    getRevue(next) {
         let url = 'https://revuecinema.ca/';
     
         request(url, (err, res, html) => {
@@ -137,14 +135,14 @@ module.exports = {
                     });
                 });
                 if(screenings.length && screenings.length > 0) { 
-                    seedScreening(screenings, "Revue Theatre", url);
+                    seedScreening(screenings, "Revue Theatre", url, next);
                 } else {
-                    seedTheatre("Revue Theatre", url);
+                    seedTheatre("Revue Theatre", url, next);
                 }
             }
         })          
     },
-    getHotDocs() {
+    getHotDocs(next) {
         let url = 'http://hotdocscinema.ca/';
     
         request(url, (err, res, html) => {
@@ -164,11 +162,15 @@ module.exports = {
                         .replace("More", '');
                     showtime.push(time);    
                     
-                    let link = $(el)
+                    let links = $(el)
                         .find('td')
                         .children('a')
-                        .attr('href')
-                        .replace(/\s\s+/g, '');
+                        .attr('href');
+
+                    let link;
+                    if(links) {
+                        link = links.replace(/\s\s+/g, '');
+                    }
 
                     let title = $(el)
                         .children('td')
@@ -184,14 +186,14 @@ module.exports = {
                     showtime = [];
                 });
                 if(screenings.length && screenings.length > 0) {
-                    seedScreening(screenings, 'HotDocs Theatre', url);
+                    seedScreening(screenings, 'HotDocs Theatre', url, next);
                 } else {
-                    seedTheatre("HotDocs Theatre", url);
+                    seedTheatre("HotDocs Theatre", url, next);
                 }
             }
         })          
     },
-    getRegent() {
+    getRegent(next) {
         let url1 = 'https://www.google.com/search?sxsrf=ACYBGNQPcNkDwCjnzSLbYFtAn7NAPlb7nA%3A1581342561585&ei=YV9BXpieI5GRggeDjpiYDg&q=the+regent+theatre+toronto&oq=the+regent+theatre+toronto&gs_l=psy-ab.3..35i39j0i7i30j0i5i30l2.10400.11006..11157...0.3..0.95.488.6......0....1..gws-wiz.......0i71j0i8i7i30j0i8i7i10i30j0i7i5i30j35i304i39.bJ5GMS0FSPk&ved=0ahUKEwjY0pqNkMfnAhWRiOAKHQMHBuMQ4dUDCAs&uact=5';
         let url = "http://regenttoronto.com/";
 
@@ -226,18 +228,18 @@ module.exports = {
                     }
                 })
                 if(screenings && screenings.length > 0) {
-                    seedScreening(screenings, "Regent Theatre", url);
+                    seedScreening(screenings, "Regent Theatre", url, next);
                 } else {
-                    seedTheatre("Regent Theatre", url);
+                    seedTheatre("Regent Theatre", url, next);
                 }
 
                 await browser.close();    
             } catch (err) {
-                console.log('ERROR: ', err);
+                next(err);
             }
         })();
     },
-    getTiff() {
+    getTiff(next) {
         let url = 'https://www.tiff.net/calendar';
         // puppeteer scraping - because browser loading the asyncronous javascript that  
         // loads our calendar data after the html template and therefore not being picked up by cheerio 
@@ -277,18 +279,18 @@ module.exports = {
                     return screening;
                 });
                 if(screenings.length && screenings.length > 0) {
-                    seedScreening(screenings, "Tiff Bell Lightbox", url);
+                    seedScreening(screenings, "Tiff Bell Lightbox", url, next);
                 } else {
-                    seedTheatre("Tiff Bell Lightbox", url);
+                    seedTheatre("Tiff Bell Lightbox", url, next);
                 }
 
                 await browser.close();    
             } catch (err) {
-                console.log('TIFF: ', err);
+                next(err);
             }
         })();
     }, 
-    getCinesphere() {
+    getCinesphere(next) {
         let url = "http://ontarioplace.com/en/cinesphere/";
 
         request(url, (err, res, html) => {
@@ -331,9 +333,9 @@ module.exports = {
                 }
                 
                 if(screenings && screenings.length > 0) {
-                    seedScreening(screenings, "Cinesphere Theatre", url);
+                    seedScreening(screenings, "Cinesphere Theatre", url, next);
                 } else {
-                    seedTheatre("Cinesphere Theatre", url);
+                    seedTheatre("Cinesphere Theatre", url, next);
                 }
             }
         })
