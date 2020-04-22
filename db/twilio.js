@@ -46,7 +46,7 @@ module.exports = {
                         from: `PTST Admin <${process.env.myEmail}>`,
                         subject: 'Todays Independent Screenings Toronto!',
                         html: content.toString(), 
-                        text: 'hii'
+                        text: 'something went wrong with email generation'
                     }
                     await sgMail.send(msg);            
                 }

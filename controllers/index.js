@@ -70,26 +70,32 @@ module.exports = {
                 to: email,
                 from: `PTST Admin <${process.env.myEmail}>`,
                 subject: 'Verify your email!',
-                text: `Hi there,
+                text:`Hi there,
 
                 Thanks for signing up to Private Screenings Toronto! Before we get started, we just need to confirm this is you.
                 
                 http://${req.headers.host}/users/verify/${token}
 
                 If you did not request this, please ignore this email and your data 
-                will be removed.`
+                will be removed.`,
+                html: `<p>Hi there,</p>
+
+                <p>Thanks for signing up to Private Screenings Toronto! Before we get started, we just need to confirm this is you.</p>
+                
+                <p><a href="http://${req.headers.host}/users/verify/${token}">Click here</a></p>
+
+                <p>If you did not request this, please ignore this email and your data 
+                will be removed.</p>`
             }
             await sgMail.send(msg);
 
-            req.session.success = `Success. 
-            Just one thing: to start receiving updates, we need to verify your email address ${email}.
-            Could you please check your email for a verification link? Thanks!`;
+            req.session.success = `Success. Just one thing: to start receiving updates, we need to verify your email address ${email}. Please check your email for a verification link.`;
             res.redirect('/');
         } catch (err) {
             let error = err.message;
 
             if(error.includes('duplicate') && error.includes('violates unique constraint "user_email_key"')) {
-                error = 'A user with that email is already registered'
+                error = 'A user with that email is already registered. To edit subscription, click link in the  top right :)'
             }            
             req.session.error = error;
             return res.redirect('/');
@@ -160,13 +166,19 @@ module.exports = {
                 http://${req.headers.host}/users/editSubscription/${token}
     
                 If you did not request this, please ignore this email and your data 
-                will be removed.`
+                will be removed.`,
+                html: `<p>Hi there,</p>
+
+                <p>Click the link below to edit your subscription.</p>
+                
+                <p><a href="http://${req.headers.host}/users/editSubscription/${token}">Here</a></p>
+
+                <p>If you did not request this, please ignore this email and your data 
+                will be removed.</p>`
             }
             await sgMail.send(msg);
     
-            req.session.success = `Success. 
-            Just one thing: to edit your subscription, we need to verify your email address ${email}.
-            Could you please check your email for a verification link? Thanks!`;
+            req.session.success = `Success. Just one thing: to start receiving updates, we need to verify your email address ${email}. Please check your email for a verification link.`;
             res.redirect('/');    
         } catch (err) {
             let error = err.message;
