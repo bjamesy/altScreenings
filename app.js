@@ -81,8 +81,8 @@ const seedSched = schedule.scheduleJob(rule, () => {
 seedSched;
 
 // TWILIO
-// const sendScreenings = schedule.scheduleJob(rule[1], () => dailyUpdate());
-// sendScreenings;
+const sendScreenings = schedule.scheduleJob(rule[1], () => dailyUpdate());
+sendScreenings;
 dailyUpdate();
 
 // use ejs-locals for all ejs templates:n
