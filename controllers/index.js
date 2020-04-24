@@ -163,7 +163,7 @@ module.exports = {
     
                 Click the link below to edit your subscription.
                 
-                http://${req.headers.host}/users/editSubscription/${token}
+                http://${req.headers.host}/users/edit-subscription/${token}
     
                 If you did not request this, please ignore this email and your data 
                 will be removed.`,
@@ -171,14 +171,14 @@ module.exports = {
 
                 <p>Click the link below to edit your subscription.</p>
                 
-                <p><a href="http://${req.headers.host}/users/editSubscription/${token}">Here</a></p>
+                <p><a href="http://${req.headers.host}/users/edit-subscription/${token}">Here</a></p>
 
                 <p>If you did not request this, please ignore this email and your data 
                 will be removed.</p>`
             }
             await sgMail.send(msg);
     
-            req.session.success = `Success. Just one thing: to start receiving updates, we need to verify your email address ${email}. Please check your email for a verification link.`;
+            req.session.success = `Success. Just one thing: to edit your subscription, we need to verify your email address ${email}. Please check your email.`;
             res.redirect('/');    
         } catch (err) {
             let error = err.message;

@@ -22,16 +22,16 @@ router.post('/verify', postVerification);
 router.put('/subscribe/:token', putSubscription);
 
 // GET pause subscription
-router.get('/editSubscription/:token', getEditSubscription);
+router.get('/edit-subscription/:token', getEditSubscription);
 
 // POST paused subscription
-router.put('/editSubscription', putEditSubscription);
+router.put('/edit-subscription', putEditSubscription);
 
 // GET edit verification
-router.get('/verifyEdit', getVerifyEdit);
+router.get('/verify-edit', getVerifyEdit);
 
 // POST edit verification 
-router.post('/verifyEdit', putVerifyEdit);
+router.post('/verify-edit', putVerifyEdit);
 
 // UPDATE cancellation 
 router.put('/unsubscribe', putUnsubscription);

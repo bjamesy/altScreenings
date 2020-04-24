@@ -53,6 +53,7 @@ module.exports = {
             }
         } catch (err) {
             console.log('TWILIO ERROR:', err); 
+            next(err);
         }
     }
 }

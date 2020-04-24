@@ -2,7 +2,7 @@
 <div class="row">
     <div style="width: 62%; margin: auto">        
         <h3>Edit Subscription for <i><%= user.email %></i></h3>
-        <form method='POST' action='/users/editSubscription?_method=PUT'>
+        <form method='POST' action='/users/edit-subscription?_method=PUT'>
             <input type="hidden" id="email" name="email" value="<%= user.email %>">
             <input style="margin: 2px auto;" class="form-control btn btn-warning btn-sm" type="submit" id="week" name="paused" value="snooze for a week">
             <input style="margin: 2px auto;" class="form-control btn btn-warning btn-sm" type="submit" id="month" name="paused" value="snooze for 1 month">
