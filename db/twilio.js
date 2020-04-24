@@ -41,6 +41,7 @@ module.exports = {
                     }
                 } else {
                     // EMAIL    
+                    console.log(user.email);
                     const msg = {
                         to: user.email,
                         from: `PTST Admin <${process.env.myEmail}>`,
@@ -53,7 +54,6 @@ module.exports = {
             }
         } catch (err) {
             console.log('TWILIO ERROR:', err); 
-            next(err);
         }
     }
 }

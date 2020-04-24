@@ -108,6 +108,10 @@ module.exports = {
             if(req.body.number == '') {
                 req.body.number = null;
             }
+            if(req.body.number === null && req.body.textUpdate === 'on') {
+                req.session.error = "You must provide a phone number to prefer text updates. Try again.";
+                return res.redirect('back');
+            }
 
             let sql = 'UPDATE "user" SET created_date = $1, text_update = $2, number = $3, verify_token_expires = $4, verify_token = $5, paused = $6 WHERE email = $7 returning *';
             let params = [
