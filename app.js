@@ -66,24 +66,24 @@ async function seedDB() {
 
     if(error.includes('Navigation timeout of 30000 ms exceeded')) {
       console.log('TIMEOUT ERROR', error);
-      seedDB();
+      return seedDB();
     }
     if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
       console.log('querySelectorALL ERROR!!', error);
-      seedDB();
+      return seedDB();
     }
     console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', error);
   }
 };
 
-const seedSched = schedule.scheduleJob(rule, () => {
-  seedDB();
-});
-seedSched;
+// const seedSched = schedule.scheduleJob(rule, () => {
+//   seedDB();
+// });
+// seedSched;
 
 // TWILIO
-const sendScreenings = schedule.scheduleJob(rule[1], () => dailyUpdate());
-sendScreenings;
+// const sendScreenings = schedule.scheduleJob(rule[1], () => dailyUpdate());
+// sendScreenings;
 // dailyUpdate();
 
 // use ejs-locals for all ejs templates:n

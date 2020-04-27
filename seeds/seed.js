@@ -1,7 +1,7 @@
 const cheerio   = require('cheerio')
     , request   = require('request')
     // puppeteer scraping - because browser loading the asyncronous javascript that  
-    // loads our calendar data after the html template and therefore doesnt get picked up by cheerio 
+    // loads our calendar data after the html template and therefore doesnt picked up by cheerio 
     , puppeteer = require('puppeteer');
 const { 
     seedScreening,
