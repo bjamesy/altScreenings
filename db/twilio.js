@@ -1,7 +1,6 @@
 const twilio            = require('twilio');
 const db                = require('../db/index');    
 const { emailTemplate } = require('../db/generateEmailTemplate');
-const { erroHandler }   = require('../middleware')
 const sgMail            = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // twilio CONFIG *********

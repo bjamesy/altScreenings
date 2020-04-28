@@ -5,7 +5,7 @@ const express          = require('express');
 const path             = require('path');
 const engine           = require('ejs-mate');
 const logger           = require('morgan');
-const schedule         = require('node-schedule');
+const cron             = require('node-cron');
 const session          = require('express-session');
 const methodOverride   = require('method-override');
 const { deleteSeeds }  = require('./db/seedQueries');
@@ -44,11 +44,7 @@ app.use(function(req, res, next) {
   next();
 })
 
-// SEED DB from web scrapes 
-// ** 3 times a day **
-const rule = new schedule.RecurrenceRule();
-rule.hour = [3, 7, 16];
-
+// SeedDB scraping all sites 
 async function seedDB() {
   try {
     // remove seeding
@@ -61,30 +57,31 @@ async function seedDB() {
     await getParadise();
     await getRevue();
     await getHotDocs();  
-  } catch (err) {
+  } catch(err) {
     let error = err.message;
 
     if(error.includes('Navigation timeout of 30000 ms exceeded')) {
-      console.log('TIMEOUT ERROR', error);
+      console.log('TIMEOUT ERROR: ', error); 
       return seedDB();
     }
     if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
       console.log('querySelectorALL ERROR!!', error);
       return seedDB();
     }
-    console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', error);
+    console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', err);
   }
 };
+// seedDB();
 
-// const seedSched = schedule.scheduleJob(rule, () => {
-//   seedDB();
-// });
-// seedSched;
+// schedule SCRAPING 3 times per day
+cron.schedule('* 3,7,16 * * *', () =>{
+  seedDB();
+})
 
-// TWILIO
-// const sendScreenings = schedule.scheduleJob(rule[1], () => dailyUpdate());
-// sendScreenings;
-// dailyUpdate();
+// schedule TWILIO updates 
+cron.schedule('* 11 * * *', () => {
+  dailyUpdate();
+})
 
 // use ejs-locals for all ejs templates:n
 app.engine('ejs', engine);

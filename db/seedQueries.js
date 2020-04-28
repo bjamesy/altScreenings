@@ -30,6 +30,7 @@ module.exports =  {
                 await client.query('COMMIT');
             }    
         } catch(err) {
+            console.log('seedScreening ERROR: ', err)
             await client.query('ROLLBACK');
             next(err);
         } finally {
@@ -37,15 +38,16 @@ module.exports =  {
         }
     },
     async deleteSeeds(next) {
-        try {
+        try { 
             let sql = 'DELETE FROM screening;';
             let theatreSQL = 'DELETE FROM theatre;';
             const { rowCount } = await db.query(sql);
             const result = await db.query(theatreSQL);
             
             console.log('REMOVED theatre SEEDS: ', result.rowCount);
-            console.log('REMOVED SEEDS: ', rowCount);
+            console.log('REMOVED SEEDS: ', rowCount);    
         } catch(err) {
+            console.log('deleteSeed ERROR: ', err);
             next(err);
         }
     },
@@ -57,10 +59,11 @@ module.exports =  {
                 url,
                 true
             ];
-
+    
             const { rows } = await db.query(sql, params);
-            console.log('THEATRE without screenings: ', rows);
-        } catch (err) {
+            console.log('THEATRE without screenings: ', rows);    
+        } catch(err) {
+            console.log('seedTheatre ERROR: ', err);
             next(err);
         }
     }
