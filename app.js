@@ -74,7 +74,7 @@ async function seedDB() {
 // seedDB();
 
 // schedule SCRAPING 3 times per day
-cron.schedule('* 2,6,15 * * *', () =>{
+cron.schedule('* 2,6,14 * * *', () =>{
   seedDB();
 })
 
