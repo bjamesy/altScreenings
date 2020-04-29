@@ -74,12 +74,12 @@ async function seedDB() {
 // seedDB();
 
 // schedule SCRAPING 3 times per day
-cron.schedule('* 3,7,16 * * *', () =>{
+cron.schedule('* 2,6,15 * * *', () =>{
   seedDB();
 })
 
 // schedule TWILIO updates 
-cron.schedule('* 11 * * *', () => {
+cron.schedule('* 10 * * *', () => {
   dailyUpdate();
 })
 
