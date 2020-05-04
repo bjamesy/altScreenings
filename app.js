@@ -45,18 +45,18 @@ app.use(function(req, res, next) {
 })
 
 // SeedDB scraping all sites 
-async function seedDB() {
+async function seedDB(next) {
   try {
     // remove seeding
     await deleteSeeds();
     // begin seeding
-    await getCinesphere();
-    await getRegent();
-    await getTiff();
-    await getRoyal();
-    await getParadise();
-    await getRevue();
-    await getHotDocs();  
+    await getCinesphere(next);
+    await getRegent(next);
+    await getTiff(next);
+    await getRoyal(next);
+    await getParadise(next);
+    await getRevue(next);
+    await getHotDocs(next);  
   } catch(err) {
     let error = err.message;
 
@@ -74,7 +74,7 @@ async function seedDB() {
 // seedDB();
 
 // schedule SCRAPING 3 times per day
-cron.schedule('* 2,10,14 * * *', () => {
+cron.schedule('* 2,12,14 * * *', () => {
   seedDB();
 });
 
