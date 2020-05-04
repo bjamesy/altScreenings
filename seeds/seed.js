@@ -303,10 +303,10 @@ module.exports = {
             }
         })();
     }, 
-    getCinesphere(next) {
+    getCinesphere() {
         let url = "http://ontarioplace.com/en/cinesphere/";
 
-        request(url, (err, res, html) => {
+        request(url, (err, res, html, next) => {
             if(!err && res.statusCode == 200) {
                 const $ = cheerio.load(html);
 
@@ -350,6 +350,9 @@ module.exports = {
                 } else {
                     seedTheatre("Cinesphere Theatre", url);
                 }
+            } else {
+                console.log('Cinisphere error :', err);
+                next(err);
             }
         })
     }

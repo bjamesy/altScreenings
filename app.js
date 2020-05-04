@@ -45,44 +45,44 @@ app.use(function(req, res, next) {
 })
 
 // SeedDB scraping all sites 
-async function seedDB(next) {
-  try {
-    // remove seeding
-    await deleteSeeds();
-    // begin seeding
-    await getCinesphere(next);
-    await getRegent(next);
-    await getTiff(next);
-    await getRoyal(next);
-    await getParadise(next);
-    await getRevue(next);
-    await getHotDocs(next);  
-  } catch(err) {
-    let error = err.message;
+// async function seedDB(next) {
+//   try {
+//     // remove seeding
+//     await deleteSeeds();
+//     // begin seeding
+//     await getCinesphere(next);
+//     await getRegent(next);
+//     await getTiff(next);
+//     await getRoyal(next);
+//     await getParadise(next);
+//     await getRevue(next);
+//     await getHotDocs(next);  
+//   } catch(err) {
+//     let error = err.message;
 
-    if(error.includes('Navigation timeout of 30000 ms exceeded')) {
-      console.log('RESEED timeout error: ', error); 
-      return seedDB();
-    }
-    if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
-      console.log('RESEED querySelectorALL error: ', error);
-      return seedDB();
-    }
-    console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', err);
-  }
-};
-seedDB();
+//     if(error.includes('Navigation timeout of 30000 ms exceeded')) {
+//       console.log('RESEED timeout error: ', error); 
+//       return seedDB();
+//     }
+//     if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+//       console.log('RESEED querySelectorALL error: ', error);
+//       return seedDB();
+//     }
+//     console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', err);
+//   }
+// };
+// seedDB();
 
 // schedule SCRAPING 3 times per day
-cron.schedule('* 2,7,14 * * *', () => {
-  console.log('CRON JOB !');
-  seedDB();
-});
+// cron.schedule('* 2,7,14 * * *', () => {
+//   console.log('CRON JOB !');
+//   seedDB();
+// });
 
-// schedule TWILIO updates 
-cron.schedule('* 10 * * *', () => {
-  dailyUpdate();
-});
+// // schedule TWILIO updates 
+// cron.schedule('* 10 * * *', () => {
+//   dailyUpdate();
+// });
 
 // use ejs-locals for all ejs templates:n
 app.engine('ejs', engine);

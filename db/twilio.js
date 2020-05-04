@@ -6,9 +6,9 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // twilio CONFIG *********
 const client            = new twilio(process.env.accountSid, process.env.authToken);
 
-module.exports = {
+// module.exports = {
     // daily updates for users 
-    async dailyUpdate () {
+    async function dailyUpdate () {
         try {
             let screeningSql = 'SELECT * FROM theatre INNER JOIN screening ON theatre.id = screening.theatre_id ORDER BY name;';
             const result = await db.query(screeningSql);
@@ -55,8 +55,9 @@ module.exports = {
         } catch (err) {
             console.log('TWILIO ERROR:', err); 
         }
-    }
-}
+    };
+    dailyUpdate();
+// }
 // ******** mock screenings for email generation ********
 // const screenings = [
 //   {
