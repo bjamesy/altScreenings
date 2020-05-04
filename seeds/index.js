@@ -1,4 +1,4 @@
-const deleteSeeds = require('../db/seedQueries');
+const { deleteSeeds } = require('../db/seedQueries');
 const { 
     getRoyal, 
     getParadise, 
