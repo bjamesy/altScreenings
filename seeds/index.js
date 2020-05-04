@@ -7,7 +7,7 @@ const {
     getRegent,
     getTiff,
     getCinesphere
-} = require('./seeds/seed');
+} = require('../seeds/seed');
 
   // SeedDB scraping all sites 
 async function seedDB(next) {
