@@ -74,14 +74,14 @@ async function seedDB() {
 // seedDB();
 
 // schedule SCRAPING 3 times per day
-cron.schedule('* 2,6,14 * * *', () =>{
+cron.schedule('* 2,10,14 * * *', () => {
   seedDB();
-})
+});
 
 // schedule TWILIO updates 
 cron.schedule('* 10 * * *', () => {
   dailyUpdate();
-})
+});
 
 // use ejs-locals for all ejs templates:n
 app.engine('ejs', engine);
