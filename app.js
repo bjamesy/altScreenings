@@ -61,20 +61,21 @@ async function seedDB(next) {
     let error = err.message;
 
     if(error.includes('Navigation timeout of 30000 ms exceeded')) {
-      console.log('TIMEOUT ERROR: ', error); 
+      console.log('RESEED timeout error: ', error); 
       return seedDB();
     }
     if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
-      console.log('querySelectorALL ERROR!!', error);
+      console.log('RESEED querySelectorALL error: ', error);
       return seedDB();
     }
     console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', err);
   }
 };
-// seedDB();
+seedDB();
 
 // schedule SCRAPING 3 times per day
-cron.schedule('* 2,13,14 * * *', () => {
+cron.schedule('* 2,7,14 * * *', () => {
+  console.log('CRON JOB !');
   seedDB();
 });
 
