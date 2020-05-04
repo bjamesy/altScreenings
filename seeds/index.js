@@ -29,6 +29,8 @@ async function seedDB(next) {
         console.log('RESEED timeout error: ', error); 
         return seedDB();
       }
+      if(error.includes('duplicate') && error.includes('violates unique constraint "user_username_key"')) {
+
       if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
         console.log('RESEED querySelectorALL error: ', error);
         return seedDB();
