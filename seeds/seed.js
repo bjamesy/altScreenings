@@ -59,7 +59,7 @@ module.exports = {
         let url = 'http://paradiseonbloor.com/calendar';
 
         try {
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
             const page = await browser.newPage();
             await page.goto(url, { waitUntil: 'networkidle2' });
     
@@ -210,7 +210,7 @@ module.exports = {
 
         (async (next) => {
             try{
-                const browser = await puppeteer.launch();
+                const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
                 const page = await browser.newPage();
                 await page.goto(url1, { waitUntil: 'networkidle2' });
 
@@ -257,7 +257,7 @@ module.exports = {
         // loads our calendar data after the html template and therefore not being picked up by cheerio 
         (async (next) => {
             try {
-                const browser = await puppeteer.launch();
+                const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
                 const page = await browser.newPage();
                 await page.goto(url, { waitUntil: 'networkidle2' });
                 
