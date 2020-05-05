@@ -5,23 +5,10 @@ const express          = require('express');
 const path             = require('path');
 const engine           = require('ejs-mate');
 const logger           = require('morgan');
-const cron             = require('node-cron');
 const session          = require('express-session');
 const methodOverride   = require('method-override');
-const { deleteSeeds }  = require('./db/seedQueries');
-const { dailyUpdate }  = require('./db/twilio');
 const indexRouter      = require('./routes/index');
 const usersRouter      = require('./routes/users');
-const { errorHandler } = require('./middleware/index');
-const { 
-  getRoyal, 
-  getParadise, 
-  getRevue,
-  getHotDocs,
-  getRegent,
-  getTiff,
-  getCinesphere
-} = require('./seeds/seed');
 
 const app = express();
 
@@ -43,46 +30,6 @@ app.use(function(req, res, next) {
   delete req.session.error;
   next();
 })
-
-// SeedDB scraping all sites 
-// async function seedDB(next) {
-//   try {
-//     // remove seeding
-//     await deleteSeeds();
-//     // begin seeding
-//     await getCinesphere(next);
-//     await getRegent(next);
-//     await getTiff(next);
-//     await getRoyal(next);
-//     await getParadise(next);
-//     await getRevue(next);
-//     await getHotDocs(next);  
-//   } catch(err) {
-//     let error = err.message;
-
-//     if(error.includes('Navigation timeout of 30000 ms exceeded')) {
-//       console.log('RESEED timeout error: ', error); 
-//       return seedDB();
-//     }
-//     if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
-//       console.log('RESEED querySelectorALL error: ', error);
-//       return seedDB();
-//     }
-//     console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', err);
-//   }
-// };
-// seedDB();
-
-// schedule SCRAPING 3 times per day
-// cron.schedule('* 2,7,14 * * *', () => {
-//   console.log('CRON JOB !');
-//   seedDB();
-// });
-
-// // schedule TWILIO updates 
-// cron.schedule('* 10 * * *', () => {
-//   dailyUpdate();
-// });
 
 // use ejs-locals for all ejs templates:n
 app.engine('ejs', engine);
