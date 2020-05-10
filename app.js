@@ -19,6 +19,17 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+// schedule SCRAPING 3 times per day
+// cron.schedule('* 2,7,14 * * *', () => {
+//   console.log('CRON JOB !');
+//   seedDB;
+// });
+
+// schedule TWILIO updates 
+// cron.schedule('* 10 * * *', () => {
+//   dailyUpdate();
+// });
+
 app.use(function(req, res, next) {
   // set default page title
   res.locals.title = 'PTST';

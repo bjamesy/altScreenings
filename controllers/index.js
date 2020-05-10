@@ -1,6 +1,5 @@
 const db               = require('../db/index')
     , crypto           = require('crypto');
-const { errorHandler } = require('../middleware');
 const sgMail           = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 

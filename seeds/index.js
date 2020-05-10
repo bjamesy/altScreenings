@@ -10,18 +10,18 @@ const {
 } = require('../seeds/seed');
 
   // SeedDB scraping all sites 
-async function seedDB(next) {
+async function seedDB() {
     try {
       // remove seeding
       await deleteSeeds();
       // begin seeding
-      await getCinesphere(next);
-      await getRegent(next);
-      await getTiff(next);
-      await getRoyal(next);
-      await getParadise(next);
-      await getRevue(next);
-      await getHotDocs(next);  
+      await getCinesphere();
+      await getRegent();
+      await getTiff();
+      await getRoyal();
+      await getParadise();
+      await getRevue();
+      await getHotDocs();  
     } catch(err) {
       let error = err.message;
   
