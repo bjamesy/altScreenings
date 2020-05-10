@@ -38,3 +38,5 @@ async function seedDB() {
       console.log('THERE WAS AN ERROR NOT CAUGHT by my if(error): ', err);
     }
 };
+
+module.export = seedDB;

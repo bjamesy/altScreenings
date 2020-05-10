@@ -54,3 +54,5 @@ async function dailyUpdate () {
         console.log('TWILIO ERROR:', err); 
     }
 };
+
+module.export = dailyUpdate;
