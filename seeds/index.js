@@ -39,4 +39,4 @@ async function seedDB() {
     }
 };
 
-module.export = seedDB;
+module.exports = seedDB; 
