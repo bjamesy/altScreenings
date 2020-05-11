@@ -12,6 +12,7 @@ const {
   // SeedDB scraping all sites 
 async function seedDB() {
     try {
+      console.log('SEEDING BEGINS:');
       // remove seeding
       await deleteSeeds();
       // begin seeding
@@ -29,7 +30,6 @@ async function seedDB() {
         console.log('RESEED timeout error: ', error); 
         return seedDB();
       }
-    //   if(error.includes('duplicate') && error.includes('violates unique constraint "user_username_key"')) {
 
       if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
         console.log('RESEED querySelectorALL error: ', error);
