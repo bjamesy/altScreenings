@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "updateScript": "node -e 'require(\"./db/twilio.js\").dailyUpdate'",
+    "seedScript": "node -e 'require(\"./seeds/index.js\").seedDB'"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.5.5",
