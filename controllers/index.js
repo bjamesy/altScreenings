@@ -139,6 +139,20 @@ module.exports = {
     async putVerifyEdit (req, res, next) {
         const { email } = req.body;
 
+        // check for existing email
+        let userSql = 'SELECT * FROM "user" WHERE email = $1';
+        let userParams = [
+            email
+        ];
+        const { rows } = await db.query(userSql, userParams);
+        const user = rows[0];
+        
+        if(!user) {
+            req.session.error = `The email ${email} does not exist in our records`;
+            return res.redirect('back');
+        }
+
+        // if user exists - proceed to send email and perform query update
         const token = await crypto.randomBytes(20).toString('hex');
 
         let sql = 'UPDATE "user" SET created_date = $1, verify_token_expires = $2, verify_token = $3 WHERE email = $4 returning *';
