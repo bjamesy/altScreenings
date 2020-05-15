@@ -266,7 +266,7 @@ module.exports = {
                     let showtime = [];
     
                     let today = document.querySelector('div[class="0"]');
-                    
+
                     if(today) {
                         let film = today.querySelectorAll('li');
 
@@ -288,10 +288,10 @@ module.exports = {
                                 })
                             }
                             showtime = [];
-                        });
-                                            
-                        return screening;    
+                        });               
                     }
+                    
+                    return screening;    
                 });
                 if(screenings.length && screenings.length > 0) {
                     seedScreening(screenings, "Tiff Bell Lightbox", url);
