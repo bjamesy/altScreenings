@@ -1,22 +1,33 @@
 <% layout('./layouts/boilerplate') -%>
 <div class="row">
     <div style="width: 62%; margin: auto">        
-        <h3>Edit Subscription for <i><%= user.email %></i></h3>
+        <h3 style="text-align: center">Edit Subscription for <i><%= user.email %></i></h3>
         <form method='POST' action='/users/edit-subscription?_method=PUT'>
+            <h6 style="text-align: center; margin: 20px auto;">
+                To change notification method
+            </h6>
+            <input style="margin: 10px auto;" class="form-control" id="number" name="number" placeholder="phone number" value="<%= user.number %>">
+            <div style="margin: 10px auto;">
+                <label for="text preferred">Check box if text updates preferred</label>
+                <input type="checkbox" name="textUpdate">    
+            </div>        
+            <input style="margin: 2px auto;" class="form-control btn btn-success" type="submit">
+            <hr>
             <input type="hidden" id="email" name="email" value="<%= user.email %>">
             <input style="margin: 2px auto;" class="form-control btn btn-warning btn-sm" type="submit" id="week" name="paused" value="snooze for a week">
             <input style="margin: 2px auto;" class="form-control btn btn-warning btn-sm" type="submit" id="month" name="paused" value="snooze for 1 month">
+            <hr>
         </form>
-    <div>   
-        <h6 style="text-align: center; margin: 20px auto;">
-            or
-        </h6>
-    </div>
-    <form method='POST' action='/users/unsubscribe?_method=PUT'>
-        <div class="form-group">
-            <input type="hidden" id="email" name="email" value="<%= user.email %>">
-            <input style="margin: 2px auto;" class="form-control btn btn-danger btn-sm" type="submit" value="Unsubscribe">
-        </div>                    
-    </form>   
+        <div>   
+            <h6 style="text-align: center; margin: 20px auto;">
+                or
+            </h6>
+        </div>
+        <form method='POST' action='/users/unsubscribe?_method=PUT'>
+            <div class="form-group">
+                <input type="hidden" id="email" name="email" value="<%= user.email %>">
+                <input style="margin: 2px auto;" class="form-control btn btn-danger btn-sm" type="submit" value="Unsubscribe">
+            </div>                    
+        </form>   
     </div>         
 </div>

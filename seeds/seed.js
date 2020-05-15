@@ -266,29 +266,32 @@ module.exports = {
                     let showtime = [];
     
                     let today = document.querySelector('div[class="0"]');
-                    let film = today.querySelectorAll('li');
-    
-                    Array.from(film).forEach(el => {
-                        let title = el.querySelector('.style__cardTitle___2lyRW').innerText;
-                        let linkDiv = el.querySelector('.style__cardScheduleItems___13OLU > div');
-                        let link = linkDiv.querySelector('.style__link___140bA').getAttribute("href");
-                        // multiple showtimes so have to grab nodelist prior to loooping through 
-                        let times = el.querySelectorAll('.style__screeningButton___22uMG');
-                        Array.from(times).forEach(el => { 
-                            showtime.push(el.innerText);
+                    
+                    if(today) {
+                        let film = today.querySelectorAll('li');
+
+                        Array.from(film).forEach(el => {
+                            let title = el.querySelector('.style__cardTitle___2lyRW').innerText;
+                            let linkDiv = el.querySelector('.style__cardScheduleItems___13OLU > div');
+                            let link = linkDiv.querySelector('.style__link___140bA').getAttribute("href");
+                            // multiple showtimes so have to grab nodelist prior to loooping through 
+                            let times = el.querySelectorAll('.style__screeningButton___22uMG');
+                            Array.from(times).forEach(el => { 
+                                showtime.push(el.innerText);
+                            });
+        
+                            if(title !== "!Toronto" && title !== "Film Reference Library Public Hours") {
+                                screening.push({
+                                    title, 
+                                    link,
+                                    showtime
+                                })
+                            }
+                            showtime = [];
                         });
-    
-                        if(title !== "!Toronto" && title !== "Film Reference Library Public Hours") {
-                            screening.push({
-                                title, 
-                                link,
-                                showtime
-                            })
-                        }
-                        showtime = [];
-                    });
-                                        
-                    return screening;
+                                            
+                        return screening;    
+                    }
                 });
                 if(screenings.length && screenings.length > 0) {
                     seedScreening(screenings, "Tiff Bell Lightbox", url);

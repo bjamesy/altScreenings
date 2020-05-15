@@ -139,20 +139,20 @@ module.exports = {
     async putVerifyEdit (req, res, next) {
         const { email } = req.body;
 
-        // check for existing email
+        // check for user with given email 
         let userSql = 'SELECT * FROM "user" WHERE email = $1';
         let userParams = [
             email
         ];
         const { rows } = await db.query(userSql, userParams);
         const user = rows[0];
-        
-        if(!user) {
+        // if user doesnt exist redirect 
+        if (!user) {
             req.session.error = `The email ${email} does not exist in our records`;
             return res.redirect('back');
-        }
+        };
 
-        // if user exists - proceed to send email and perform query update
+        // since user exists - proceed to send email and perform query update
         const token = await crypto.randomBytes(20).toString('hex');
 
         let sql = 'UPDATE "user" SET created_date = $1, verify_token_expires = $2, verify_token = $3 WHERE email = $4 returning *';
@@ -212,15 +212,23 @@ module.exports = {
     },
     // POST edit subscription
     async putEditSubscription (req, res, next) {
-        let paused; 
-
+        // set values from form to psql table appropriate values
+        if(req.body.number == '') {
+            req.body.number = null;
+        }
+        let paused;
         if(req.body.paused === 'snooze for a week') {
             paused = Date.now() + 604800000;
         }
         if(req.body.paused === 'snooze for 1 month') {
             paused = Date.now() + 2419200000;
         }    
-
+        // check if number provided for textUpdate option
+        if(req.body.number === null && req.body.textUpdate === 'on') {
+            req.session.error = "You must provide a phone number to prefer text updates. Try again.";
+            return res.redirect('back');
+        }
+        
         let checkUser = 'SELECT * FROM "user" WHERE email = $1';
         let checkParams = [req.body.email];
         const result = await db.query(checkUser, checkParams);
@@ -231,16 +239,31 @@ module.exports = {
             return res.redirect('back');
         }
 
-        let sql = 'UPDATE "user" SET paused = $1, created_date = $2 WHERE email = $3 returning *';
+        let sql = 'UPDATE "user" SET paused = $1, created_date = $2, number = $4, text_update = $5 WHERE email = $3 returning *';
         let params = [
             paused,
             Date.now(),
-            req.body.email
+            req.body.email, 
+            req.body.number,
+            req.body.textUpdate
         ];
-        await db.query(sql, params);
+        const results = await db.query(sql, params);
+        const updatedUser = results.rows[0];
 
-        req.session.success = `Your updates will ${ req.body.paused }`;
-        return res.redirect('/');    
+        if(req.body.paused && !req.body.number) {
+            req.session.success = `Your updates will ${ req.body.paused }`;
+            return res.redirect('/');        
+        }
+
+        if(req.body.number && req.body.textUpdate === 'on') {
+            req.session.success = `Your will now receive updates to ${ updatedUser.number }`;
+            return res.redirect('/');        
+        }
+
+        if(req.body.textUpdate && req.body.paused) {
+            req.session.error = `Your updates will ${ req.body.paused } and then you will begin receiving updates to ${ updatedUser.number }`;
+            return res.redirect('/');        
+        }
     },
     // POST unsubscribe
     async putUnsubscription (req, res, next) {

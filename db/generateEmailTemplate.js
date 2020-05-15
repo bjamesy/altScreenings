@@ -15,7 +15,7 @@ function seedTemplateScreenings(screenings) {
             <a href="${screening.link}">Buy tickets here</a>
             ${seedShowtimes(screening)}`.replace(/\s\s+/g, ''));
     });
-    html.push(`<p>Unsubscribe or snooze <a href='http://THIS HAS TO BE SWITCHED/users/pause'>here</a></p>`);
+    html.push(`<p>Unsubscribe or snooze <a href='http://torontoscreenings.herokuapp.com/users/verify-edit'>here</a></p>`);
 
     return html.toString().replace(/,/g, "");
 };
