@@ -3,7 +3,7 @@ const { Pool } = require('pg')
     , pool     = new Pool();
 
 module.exports =  {
-    async seedScreening(screenings, theatre, url, next) {
+    async seedScreening(screenings, theatre, url) {
         const client = await pool.connect();
 
         try {
@@ -32,12 +32,11 @@ module.exports =  {
         } catch(err) {
             console.log('seedScreening ERROR: ', err)
             await client.query('ROLLBACK');
-            next(err);
         } finally {
             await client.release();
         }
     },
-    async deleteSeeds(next) {
+    async deleteSeeds() {
         try { 
             let sql = 'DELETE FROM screening;';
             let theatreSQL = 'DELETE FROM theatre;';
@@ -48,10 +47,9 @@ module.exports =  {
             console.log('REMOVED SEEDS: ', rowCount);    
         } catch(err) {
             console.log('deleteSeed ERROR: ', err);
-            next(err);
         }
     },
-    async seedTheatre(theatre, url, next) {
+    async seedTheatre(theatre, url) {
         try {
             let sql = "INSERT INTO theatre (name, url, no_screenings) VALUES ($1, $2, $3) returning *";
             let params = [
@@ -64,7 +62,6 @@ module.exports =  {
             console.log('THEATRE without screenings: ', rows);    
         } catch(err) {
             console.log('seedTheatre ERROR: ', err);
-            next(err);
         }
     }
 }

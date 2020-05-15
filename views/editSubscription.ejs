@@ -4,7 +4,7 @@
         <h3 style="text-align: center">Edit Subscription for <i><%= user.email %></i></h3>
         <form method='POST' action='/users/edit-subscription?_method=PUT'>
             <h6 style="text-align: center; margin: 20px auto;">
-                To change notification method
+                To change notification method:
             </h6>
             <input style="margin: 10px auto;" class="form-control" id="number" name="number" placeholder="phone number" value="<%= user.number %>">
             <div style="margin: 10px auto;">
@@ -13,6 +13,11 @@
             </div>        
             <input style="margin: 2px auto;" class="form-control btn btn-success" type="submit">
             <hr>
+            <div>   
+                <h6 style="text-align: center; margin: 20px auto;">
+                    To pause daily updates:
+                </h6>
+            </div>    
             <input type="hidden" id="email" name="email" value="<%= user.email %>">
             <input style="margin: 2px auto;" class="form-control btn btn-warning btn-sm" type="submit" id="week" name="paused" value="snooze for a week">
             <input style="margin: 2px auto;" class="form-control btn btn-warning btn-sm" type="submit" id="month" name="paused" value="snooze for 1 month">
@@ -20,7 +25,7 @@
         </form>
         <div>   
             <h6 style="text-align: center; margin: 20px auto;">
-                or
+                or:
             </h6>
         </div>
         <form method='POST' action='/users/unsubscribe?_method=PUT'>

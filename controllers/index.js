@@ -228,7 +228,7 @@ module.exports = {
             req.session.error = "You must provide a phone number to prefer text updates. Try again.";
             return res.redirect('back');
         }
-        
+        // check for user
         let checkUser = 'SELECT * FROM "user" WHERE email = $1';
         let checkParams = [req.body.email];
         const result = await db.query(checkUser, checkParams);
@@ -239,6 +239,7 @@ module.exports = {
             return res.redirect('back');
         }
 
+        // update user!
         let sql = 'UPDATE "user" SET paused = $1, created_date = $2, number = $4, text_update = $5 WHERE email = $3 returning *';
         let params = [
             paused,
@@ -255,13 +256,13 @@ module.exports = {
             return res.redirect('/');        
         }
 
-        if(req.body.number && req.body.textUpdate === 'on') {
+        if(req.body.number && req.body.textUpdate === 'on' && !req.body.paused) {
             req.session.success = `Your will now receive updates to ${ updatedUser.number }`;
             return res.redirect('/');        
         }
 
         if(req.body.textUpdate && req.body.paused) {
-            req.session.error = `Your updates will ${ req.body.paused } and then you will begin receiving updates to ${ updatedUser.number }`;
+            req.session.success = `Your updates will ${ req.body.paused } and then you will begin receiving updates to ${ updatedUser.number }`;
             return res.redirect('/');        
         }
     },
