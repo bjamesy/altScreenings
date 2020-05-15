@@ -9,6 +9,7 @@ const session          = require('express-session');
 const methodOverride   = require('method-override');
 const indexRouter      = require('./routes/index');
 const usersRouter      = require('./routes/users');
+const { seedDB }       = require('./seeds/index');
 
 const app = express();
 
@@ -18,17 +19,6 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
 }));
-
-// schedule SCRAPING 3 times per day
-// cron.schedule('* 2,7,14 * * *', () => {
-//   console.log('CRON JOB !');
-//   seedDB;
-// });
-
-// schedule TWILIO updates 
-// cron.schedule('* 10 * * *', () => {
-//   dailyUpdate();
-// });
 
 app.use(function(req, res, next) {
   // set default page title
@@ -41,6 +31,8 @@ app.use(function(req, res, next) {
   delete req.session.error;
   next();
 })
+
+// seedDB();
 
 // use ejs-locals for all ejs templates:n
 app.engine('ejs', engine);
@@ -62,7 +54,7 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// controller error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   // res.locals.message = err.message;
