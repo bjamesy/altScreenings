@@ -55,4 +55,4 @@ async function dailyUpdate () {
     }
 };
 
-module.exports = dailyUpdate();
+module.exports = { dailyUpdate };
