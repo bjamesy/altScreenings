@@ -71,7 +71,7 @@ async function getParadise() {
     try {
         const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
         const page = await browser.newPage();
-        await page.goto(url, { waitUntil: 'networkidle2' });
+        await page.goto(url, { waitUntil: 'networkidle0' });
 
         let screenings = await page.evaluate(() => {
             let screening = [];
@@ -255,7 +255,7 @@ function getRegent() {
         try{
             const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
             const page = await browser.newPage();
-            await page.goto(url1, { waitUntil: 'networkidle2' });
+            await page.goto(url1, { waitUntil: 'networkidle0' });
 
             let screenings = await page.evaluate(() => {
                 let screening = [];
@@ -313,8 +313,8 @@ function getTiff() {
         try {
             const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
             const page = await browser.newPage();
-            await page.goto(url, { waitUntil: 'networkidle2' });
-            
+            await page.goto(url, { waitUntil: 'networkidle0' });
+
             let screenings = await page.evaluate(() => {
                 let screening = [];
                 let showtime = [];
