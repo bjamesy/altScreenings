@@ -4,6 +4,7 @@ const { Pool } = require('pg')
 
 module.exports =  {
     async seedScreening(screenings, theatre, url) {
+        console.log('trying to connect here');
         const client = await pool.connect();
 
         try {
