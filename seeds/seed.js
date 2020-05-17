@@ -311,7 +311,7 @@ function getTiff() {
     // loads our calendar data after the html template and therefore not being picked up by cheerio 
     (async () => {
         try {
-            const browser = await puppeteer.launch({ ignoreHTTPSErrors: true, args: ['--no-sandbox'] });
+            const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
             const page = await browser.newPage();
             await page.goto(url, { waitUntil: 'networkidle0' });
 
