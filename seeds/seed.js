@@ -253,38 +253,43 @@ function getRegent() {
 
     (async () => {
         try{
-            const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+            const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
             const page = await browser.newPage();
-            await page.goto(url1, { waitUntil: 'networkidle0' });
 
-            let screenings = await page.evaluate(() => {
-                let screening = [];
+            try {
+                await page.goto(url1, { waitUntil: 'networkidle0' });
 
-                let today = document.querySelector('div[data-date="Today"]');
-
-                if(today) {
-                    let film = today.querySelectorAll('.lr_c_fcb');
-                
-                    Array.from(film).forEach(el => {
-                        let showtime = [];
-
-                        let title = el.querySelector('.vk_bk').innerText;
-                        showtime.push(el.querySelector('.lr_c_stnl').innerText);
-
-                        screening.push({
-                            title,
-                            showtime
-                        })
-                        showtime = [];
-                    });
-
-                    return screening;    
-                }
-            })
-            if(screenings && screenings.length > 0) {
-                seedScreening(screenings, "Regent Theatre", url);
-            } else {
-                seedTheatre("Regent Theatre", url);
+                let screenings = await page.evaluate(() => {
+                    let screening = [];
+    
+                    let today = document.querySelector('div[data-date="Today"]');
+    
+                    if(today) {
+                        let film = today.querySelectorAll('.lr_c_fcb');
+                    
+                        Array.from(film).forEach(el => {
+                            let showtime = [];
+    
+                            let title = el.querySelector('.vk_bk').innerText;
+                            showtime.push(el.querySelector('.lr_c_stnl').innerText);
+    
+                            screening.push({
+                                title,
+                                showtime
+                            })
+                            showtime = [];
+                        });
+    
+                        return screening;    
+                    }
+                })
+                if(screenings && screenings.length > 0) {
+                    seedScreening(screenings, "Regent Theatre", url);
+                } else {
+                    seedTheatre("Regent Theatre", url);
+                }    
+            } catch (err) {
+                console.log(err);
             }
 
             await browser.close();    
