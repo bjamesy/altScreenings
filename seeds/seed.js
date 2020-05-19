@@ -357,7 +357,9 @@ function getTiff(i) {
                     Array.from(film).forEach(el => {
                         let title = el.querySelector('.style__cardTitle___2lyRW').innerText;
                         let linkDiv = el.querySelector('.style__cardScheduleItems___13OLU > div');
-                        let link = linkDiv.querySelector('.style__link___140bA').getAttribute("href");
+                        let links = linkDiv.querySelector('.style__link___140bA').getAttribute("href");
+                        let urLink = 'https://www.tiff.net';
+                        let link = urLink + links;
                         // multiple showtimes so have to grab nodelist prior to loooping through 
                         let times = el.querySelectorAll('.style__screeningButton___22uMG');
                         Array.from(times).forEach(el => { 
