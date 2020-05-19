@@ -238,7 +238,6 @@ module.exports = {
             req.session.error = 'That email is not in our records';
             return res.redirect('back');
         }
-
         // update user!
         let sql = 'UPDATE "user" SET paused = $1, created_date = $2, number = $4, text_update = $5 WHERE email = $3 returning *';
         let params = [
@@ -251,11 +250,7 @@ module.exports = {
         const results = await db.query(sql, params);
         const updatedUser = results.rows[0];
 
-        if(req.body.paused && !req.body.number) {
-            req.session.success = `Your updates will ${ req.body.paused }`;
-            return res.redirect('/');        
-        }
-
+        // account for possible combinations of req.body values returned from form
         if(req.body.number && req.body.textUpdate === 'on' && !req.body.paused) {
             req.session.success = `Your will now receive updates to ${ updatedUser.number }`;
             return res.redirect('/');        
@@ -265,6 +260,9 @@ module.exports = {
             req.session.success = `Your updates will ${ req.body.paused } and then you will begin receiving updates to ${ updatedUser.number }`;
             return res.redirect('/');        
         }
+
+        req.session.success = `Your updates will ${ req.body.paused }`;
+        return res.redirect('/');
     },
     // POST unsubscribe
     async putUnsubscription (req, res, next) {
