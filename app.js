@@ -5,7 +5,7 @@ const express          = require('express');
 const path             = require('path');
 const engine           = require('ejs-mate');
 const logger           = require('morgan');
-const session          = require('express-session');
+const session          = require('cookie-session');
 const methodOverride   = require('method-override');
 const indexRouter      = require('./routes/index');
 const usersRouter      = require('./routes/users');
@@ -15,9 +15,11 @@ const app = express();
 
 // CONFIG sessions ! 
 app.use(session({
-  secret: "we the north",
-  resave: false,
-  saveUninitialized: true,
+  name: "session",
+  keys: ["key 1", "key 2"]
+  // secret: "we the north",
+  // resave: true,
+  // saveUninitialized: true
 }));
 
 app.use(function(req, res, next) {
