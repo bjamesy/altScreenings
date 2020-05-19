@@ -8,7 +8,7 @@ const {
     seedTheatre
 } = require('../db/seedQueries');
 
-function getRoyal() {
+function getRoyal(i) {
     let url = 'http://theroyal.to/'
 
     request(url, (err, res, html) => {
@@ -53,19 +53,25 @@ function getRoyal() {
 
             console.log('ROYAL theatre', err);
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded')) {
+            if(i >= 7) {
+                console.log('rerun limit met/exceeded !')
+            }    
+
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
                 console.log('RESEED royal timeout error: ', error); 
-                return getRoyal();
+                i++;
+                return getRoyal(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
                 console.log('RESEED royal querySelectorALL error: ', error);
-                return getRoyal();
+                i++;
+                return getRoyal(i);
             }                            
         }
     })    
 };
-async function getParadise() {
+async function getParadise(i) {
     let url = 'http://paradiseonbloor.com/calendar';
 
     try {
@@ -112,18 +118,24 @@ async function getParadise() {
 
         console.log('PARADISE error: ', err);
 
-        if(error.includes('Navigation timeout of 30000 ms exceeded')) {
+        if(i >= 7) {
+            console.log('rerun limit met/exceeded !')
+        }
+
+        if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7 ) {
             console.log('RESEED paradise timeout error: ', error); 
-            return getParadise();
+            i++;
+            return getParadise(i);
         }
     
-        if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+        if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
             console.log('RESEED paradise querySelectorALL error: ', error);
-            return getParadise();
+            i++;
+            return getParadise(i);
         }                            
     }
 };
-function getRevue() {
+function getRevue(i) {
     let url = 'https://revuecinema.ca/';
 
     request(url, (err, res, html) => {
@@ -170,19 +182,25 @@ function getRevue() {
 
             console.log('REVUE error :', err);
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded')) {
+            if(i >= 7) {
+                console.log('rerun limit met/exceeded !')
+            }    
+
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
                 console.log('RESEED revue timeout error: ', error); 
-                return getRevue();
+                i++;
+                return getRevue(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
                 console.log('RESEED revue querySelectorALL error: ', error);
-                return getRevue();
+                i++;
+                return getRevue(i);
             }                            
         }
     })          
 };
-function getHotDocs() {
+function getHotDocs(i) {
     let url = 'http://hotdocscinema.ca/';
 
     request(url, (err, res, html) => {
@@ -235,19 +253,25 @@ function getHotDocs() {
 
             console.log('HOTDOCS error :', err);
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded')) {
-                console.log('RESEED hotdocs timeout error: ', error); 
-                return getHotDocs();
+            if(i >= 7) {
+                console.log('rerun limit met/exceeded !')
+            }    
+
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
+                console.log('RESEED hotdocs timeout error: ', error);
+                i++; 
+                return getHotDocs(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
                 console.log('RESEED hotdocs querySelectorALL error: ', error);
-                return getHotDocs();
+                i++;
+                return getHotDocs(i);
             }                            
         }
     })          
 };
-function getRegent() {
+function getRegent(i) {
     let url1 = 'https://www.google.com/search?sxsrf=ACYBGNQPcNkDwCjnzSLbYFtAn7NAPlb7nA%3A1581342561585&ei=YV9BXpieI5GRggeDjpiYDg&q=the+regent+theatre+toronto&oq=the+regent+theatre+toronto&gs_l=psy-ab.3..35i39j0i7i30j0i5i30l2.10400.11006..11157...0.3..0.95.488.6......0....1..gws-wiz.......0i71j0i8i7i30j0i8i7i10i30j0i7i5i30j35i304i39.bJ5GMS0FSPk&ved=0ahUKEwjY0pqNkMfnAhWRiOAKHQMHBuMQ4dUDCAs&uact=5';
     let url = "http://regenttoronto.com/";
 
@@ -293,19 +317,25 @@ function getRegent() {
 
             console.log('REGENT error: ', err);
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded')) {
+            if(i >= 7) {
+                console.log('rerun limit met/exceeded !')
+            }    
+
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
                 console.log('RESEED regent timeout error: ', error); 
-                return getRegent();
+                i++;
+                return getRegent(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
                 console.log('RESEED regent querySelectorALL error: ', error);
-                return getRegent();
+                i++;
+                return getRegent(i);
             }                            
         }
     })();
 };
-function getTiff() {
+function getTiff(i) {
     let url = 'https://www.tiff.net/calendar';
     // puppeteer scraping - because browser loading the asyncronous javascript that  
     // loads our calendar data after the html template and therefore not being picked up by cheerio 
@@ -359,19 +389,25 @@ function getTiff() {
 
             console.log('TIFF error: ', err);
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded')) {
+            if(i >= 7) {
+                console.log('rerun limit met/exceeded !')
+            }    
+
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
                 console.log('RESEED tiff timeout error: ', error); 
-                return getTiff();
+                i++;
+                return getTiff(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
                 console.log('RESEED tiff querySelectorALL error: ', error);
-                return getTiff();
+                i++;
+                return getTiff(i);
             }                            
         }
     })();
 };
-function getCinesphere() {
+function getCinesphere(i) {
     let url = "http://ontarioplace.com/en/cinesphere/";
 
     request(url, (err, res, html) => {
@@ -423,14 +459,20 @@ function getCinesphere() {
 
             console.log('Cinisphere error :', err);
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded')) {
+            if(i >= 7) {
+                console.log('rerun limit met/exceeded !')
+            }    
+
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
                 console.log('RESEED cinisphere timeout error: ', error); 
-                return getCinesphere();
+                i++;
+                return getCinesphere(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null')) {
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
                 console.log('RESEED cinisphere querySelectorALL error: ', error);
-                return getCinesphere();
+                i++;
+                return getCinesphere(i);
             }  
         }
     })
