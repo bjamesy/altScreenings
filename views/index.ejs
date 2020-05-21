@@ -16,9 +16,11 @@
 
 <% theatres.forEach(theatre => { %>
     <a href="<%= theatre.url %>" class="btn btn-light"><h2><%= theatre.name %></h2></a> 
+    <div class="row">
     <% screenings.forEach((screening, i) => { %>
         <% if(screening.theatre_id == theatre.id) { %>
-        <div class="card" style="width: 19rem;">
+        <div class="col-sm-6">
+        <div class="card">
             <div class="card-body">
                 <h6 class="card-title">
                 <%= screening.title %>
@@ -36,8 +38,9 @@
             <% } %> 
             </div>
         </div>
+        </div>
         <br>
-        <% } %>
+      <% } %>
     <% }) %>
     <% if(theatre.no_screenings) { %>
         <div class="card" style="width: 19rem;">
@@ -48,6 +51,7 @@
             </div>
         </div>        
     <% } %>
+    </div>
     <br>
     <hr>
 <% }) %>
