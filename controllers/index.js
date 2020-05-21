@@ -6,15 +6,18 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 module.exports = {
     // GET landing page
     async getLanding (req, res, next) {
-        let sql = 'SELECT * FROM theatre LEFT OUTER JOIN screening ON theatre.id = screening.theatre_id ORDER BY name';
-        const { rows, rowCount } = await db.query(sql);
+        let theatreQuery = 'SELECT * FROM theatre';
+        let screeningQuery = 'SELECT * FROM screening';
+        const { rows } = await db.query(theatreQuery);
+        const result = await db.query(screeningQuery);
     
-        console.log(rowCount);
+        console.log(result.rowCount);
     
         return res.render("index", { 
             title: 'PTST',
-            screenings: rows,
-            screeningCount: rowCount
+            screenings: result.rows,
+            theatres: rows,
+            screeningCount: result.rowCount
         });  
     }, 
     // GET verification page 

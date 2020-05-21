@@ -1,77 +1,53 @@
 <% layout('./layouts/boilerplate') -%>
 
 <div style="width: 67%; margin: 5px auto" class="navbar-light bg-light">
-  <h2 style="margin: 15px auto; text-align: center;">Sign up to never miss a hot screening in Toronto</h2> 
-  <p style="text-align: center; margin: 15px auto">Get notified daily of the screenings of private theatres in Toronto, by text or email</p>  
-  <form method='POST' action='/users/verify'>
-    <div style="text-align: center;">
-      <input style="width: 50%; margin: 5px auto;" class="form-control" type="email" id="email" name="email" placeholder="Enter your email..." required>
-      <input style="width: 50%; margin: 5px auto;" class="form-control btn btn-warning" type="submit">
-      <p><i>No spam, ever. Easy unsubscribe.</i></p>
-    </div>
-  </form>
+    <h2 style="margin: 15px auto; text-align: center;">Sign up to never miss a hot screening in Toronto</h2> 
+    <p style="text-align: center; margin: 15px auto">Get notified daily of the screenings of private theatres in Toronto, by text or email</p>  
+    <form method='POST' action='/users/verify'>
+      <div style="text-align: center;">
+        <input style="width: 50%; margin: 5px auto;" class="form-control" type="email" id="email" name="email" placeholder="Enter your email..." required>
+        <input style="width: 50%; margin: 5px auto;" class="form-control btn btn-warning" type="submit">
+        <p><i>No spam, ever. Easy unsubscribe.</i></p>
+      </div>
+    </form>
 </div>
 <br>
 <hr>
 
-<% screenings.forEach((screening, i) => { %>
-  <% if((i > 0) && (screening.name == screenings[i - 1].name)) { %> 
-    <% if(screening.title) { %>
-      <div class="card" style="width: 19rem;">
-        <div class="card-body">
-          <h6 class="card-title">
-            <%= screening.title %>
-            <hr>
-          </h6>  
-        <% screening.showtime.forEach(time => { %>
-          <p class="card-text">
-            <%= time %>
-          </p>
-        <% }) %> 
-        <% if(screening.link) { %> 
-          <a class="btn btn-primary" style="position: absolute; bottom: 0;" href="<%= screening.link %>">Buy tickets</a>
-        <% } %> 
+<% theatres.forEach(theatre => { %>
+    <a href="<%= theatre.url %>" class="btn btn-light"><h2><%= theatre.name %></h2></a> 
+    <% screenings.forEach((screening, i) => { %>
+        <% if(screening.theatre_id == theatre.id) { %>
+        <div class="card" style="width: 19rem;">
+            <div class="card-body">
+                <h6 class="card-title">
+                <%= screening.title %>
+                <hr>
+                </h6>  
+            <% if(screening.showtime) { %> 
+                <% screening.showtime.forEach(time => { %>
+                    <p class="card-text">
+                    <%= time %>
+                    </p>
+                <% }) %> 
+            <% } %>
+            <% if(screening.link) { %> 
+                <a class="btn btn-primary" style="position: absolute; bottom: 0;" href="<%= screening.link %>">Buy tickets</a>
+            <% } %> 
+            </div>
         </div>
-      </div>
-    <% } else { %>
-      <div class="card" style="width: 19rem;">
-        <div class="card-body">
-          <p class="card-text">
-            No screenings at this location today
-          </p>
-        </div>
-      </div>
-    <% } %>
-    <br>  
-  <% } else { %>
-    <a href="<%= screening.url %>" class="btn btn-light"><h2><%= screening.name %></h2></a> 
-    <% if(screening.title) { %>
-      <div class="card" style="width: 19rem;">
-        <div class="card-body">
-          <h6 class="card-title">
-            <%= screening.title %>
-            <hr>
-          </h6>  
-        <% screening.showtime.forEach(time => { %>
-          <p class="card-text">
-            <%= time %>
-          </p>
-        <% }) %> 
-        <% if(screening.link) { %> 
-          <a class="btn btn-primary" style="position: absolute; bottom: 0;" href="<%= screening.link %>">Buy tickets</a>
-        <% } %> 
-        </div>
-      </div>
-    <% } %>
-    <% if(screening.no_screenings) { %>
-      <div class="card" style="width: 19rem;">
-        <div class="card-body">
-          <p class="card-text">
-            No screenings at this location today
-          </p>
-        </div>
-      </div>
+        <br>
+        <% } %>
+    <% }) %>
+    <% if(theatre.no_screenings) { %>
+        <div class="card" style="width: 19rem;">
+            <div class="card-body">
+              <p class="card-text">
+                No screenings at this location today
+              </p>
+            </div>
+        </div>        
     <% } %>
     <br>
-  <% } %>  
-<% }) %> 
+    <hr>
+<% }) %>
