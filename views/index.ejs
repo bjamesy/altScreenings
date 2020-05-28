@@ -15,11 +15,13 @@
 <hr>
 
 <% theatres.forEach(theatre => { %>
-    <a href="<%= theatre.url %>" class="btn btn-light"><h2><%= theatre.name %></h2></a> 
+    <div class="row">
+      <a href="<%= theatre.url %>" class="btn btn-light"><h2><%= theatre.name %></h2></a> 
+    </div>
     <div class="row">
     <% screenings.forEach((screening, i) => { %>
         <% if(screening.theatre_id == theatre.id) { %>
-        <div class="card float-left" style="width: 19rem;">
+        <div class="card shadow-sm" style="width: 15rem; margin: 4px;">
             <div class="card-body">
                 <h6 class="card-title">
                   <%= screening.title %>
@@ -27,24 +29,23 @@
                 </h6>  
             <% if(screening.showtime) { %> 
                 <% screening.showtime.forEach(time => { %>
-                    <p class="card-text">
-                    <%= time %>
-                    </p>
+                  <ul class="list-unstyled mt-3 mb-3">
+                    <li>
+                      <a class="btn btn-sm btn-outline-primary" href="<%= screening.link %>"><%= time %></a>
+                    </li>
+                  </ul>
                 <% }) %> 
             <% } %>
-            <% if(screening.link) { %> 
-                <a class="btn btn-primary" style="position: absolute; bottom: 0;" href="<%= screening.link %>">Buy tickets</a>
-            <% } %> 
             </div>
         </div>
         <br>
       <% } %>
     <% }) %>
     <% if(theatre.no_screenings) { %>
-        <div class="card" style="width: 19rem;">
+        <div class="card shadow-sm" style="width: 15rem; margin: 4px;">
             <div class="card-body">
-              <p class="card-text">
-                No screenings at this location today
+              <p class="card-text" style="text-align: center;">
+                ** No screenings at this location today **
               </p>
             </div>
         </div>        
