@@ -123,12 +123,11 @@ module.exports = {
                 from: `IST Admin <${process.env.myEmail}>`,
                 subject: 'Welcome!',
                 html: `<p>Thanks for signing up!</p>
-                
+                <p>A few things: </p>
                 <ul>
-                    <p>A few things: </p>
                     <li>Daily updates will be sent out at 10:00am EST</li>
                     <li>The updates can be muted anytime for a week, a month, or indefinitely <a href="http://${req.headers.host}/users/verify-edit">here</a></li>
-                    <li>If you selected phone updates we recommend you mute the conversation</li>
+                    <li>If you selected text updates we recommend you mute the conversation</li>
                     <li>Feedback can be sent to ${ process.env.myEmail }</li>
                 </ul>`
             }
@@ -232,6 +231,7 @@ module.exports = {
     // POST edit subscription
     async putEditSubscription (req, res, next) {
         // set values from form to psql table appropriate values
+        console.log(req.body);
         if(req.body.number == '') {
             req.body.number = null;
         }
@@ -242,6 +242,9 @@ module.exports = {
         if(req.body.paused === 'snooze for 1 month') {
             paused = Date.now() + 2419200000;
         }    
+        if(!req.body.paused) {
+            paused = 0;
+        }
         // check if number provided for textUpdate option
         if(req.body.number === null && req.body.textUpdate === 'on') {
             req.session.error = "You must provide a phone number to prefer text updates. Try again.";
