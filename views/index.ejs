@@ -6,7 +6,7 @@
     <form method='POST' action='/users/verify'>
       <div style="text-align: center;">
         <input style="width: 50%; margin: 5px auto;" class="form-control" type="email" id="email" name="email" placeholder="Enter your email..." required>
-        <input style="width: 50%; margin: 5px auto;" class="form-control btn btn-warning" type="submit">
+        <input style="width: 50%; margin: 5px auto;" class="form-control btn btn-outline-warning" type="submit">
         <p><i>No spam, ever. Easy unsubscribe.</i></p>
       </div>
     </form>
@@ -16,12 +16,12 @@
 
 <% theatres.forEach(theatre => { %>
     <div class="row">
-      <a href="<%= theatre.url %>" class="btn btn-light"><h2><%= theatre.name %></h2></a> 
+      <a href="<%= theatre.url %>" class="btn btn-link text-dark"><h2><%= theatre.name %></h2></a> 
     </div>
     <div class="row">
     <% screenings.forEach((screening, i) => { %>
         <% if(screening.theatre_id == theatre.id) { %>
-        <div class="card shadow-sm" style="width: 15rem; margin: 4px;">
+        <div class="card shadow-sm" style="width: 19rem; margin: 4px;">
             <div class="card-body">
                 <h6 class="card-title">
                   <%= screening.title %>
@@ -42,12 +42,10 @@
       <% } %>
     <% }) %>
     <% if(theatre.no_screenings) { %>
-        <div class="card shadow-sm" style="width: 15rem; margin: 4px;">
-            <div class="card-body">
+        <div style="width: 19rem; margin: 4px;">
               <p class="card-text" style="text-align: center;">
-                ** No screenings at this location today **
+                <i>** No screenings at this location today **</i>
               </p>
-            </div>
         </div>        
     <% } %>
     </div>
