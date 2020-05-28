@@ -24,7 +24,7 @@ app.use(session({
 
 app.use(function(req, res, next) {
   // set default page title
-  res.locals.title = 'PTST';
+  res.locals.title = 'IST';
   // SUCCESS flash message in header
   res.locals.success = req.session.success || '';
   delete req.session.success;
