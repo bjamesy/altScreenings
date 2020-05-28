@@ -143,10 +143,11 @@ function getRevue(i) {
             const $ = cheerio.load(html);
 
             let screenings = [];
-            let showtime = [];
 
             $('.wpt_listing').each((i, el) => {
                 $(el).find('.wp_theatre_event').each((i, elem) => {
+                    let showtime = [];
+                    
                     let link = $(elem)
                         .find('.wp_theatre_event_title')
                         .children('a')
