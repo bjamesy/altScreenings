@@ -14,7 +14,7 @@ module.exports = {
         console.log(result.rowCount);
     
         return res.render("index", { 
-            title: 'PTST',
+            title: 'IST',
             screenings: result.rows,
             theatres: rows,
             screeningCount: result.rowCount
@@ -59,7 +59,7 @@ module.exports = {
 
             const msg = {
                 to: email,
-                from: `PTST Admin <${process.env.myEmail}>`,
+                from: `IST Admin <${process.env.myEmail}>`,
                 subject: 'Verify your email!',
                 text:`Hi there,
 
@@ -120,16 +120,16 @@ module.exports = {
 
             const msg = {
                 to: req.body.email,
-                from: `PTST Admin <${process.env.myEmail}>`,
-                subject: 'Verify your email!',
-                html: `<p>Thanks for signing up to Private Screenings Toronto!</p>
+                from: `IST Admin <${process.env.myEmail}>`,
+                subject: 'Welcome!',
+                html: `<p>Thanks for signing up!</p>
                 
                 <ul>
                     <p>A few things: </p>
                     <li>Daily updates will be sent out at 10:00am EST</li>
                     <li>The updates can be muted anytime for a week, a month, or indefinitely <a href="http://${req.headers.host}/users/verify-edit">here</a></li>
                     <li>If you selected phone updates we recommend you mute the conversation</li>
-                    <li>Any feedback on the application can be sent to ${ process.env.myEmail }</li>
+                    <li>Feedback can be sent to ${ process.env.myEmail }</li>
                 </ul>`
             }
             await sgMail.send(msg);
@@ -185,7 +185,7 @@ module.exports = {
 
         const msg = {
             to: email,
-            from: `PTST Admin <${process.env.myEmail}>`,
+            from: `IST Admin <${process.env.myEmail}>`,
             subject: 'Verify your email!',
             text: `Hi there,
 
@@ -258,13 +258,15 @@ module.exports = {
             return res.redirect('back');
         }
         // update user!
-        let sql = 'UPDATE "user" SET paused = $1, created_date = $2, number = $4, text_update = $5 WHERE email = $3 returning *';
+        let sql = 'UPDATE "user" SET paused = $1, created_date = $2, number = $4, text_update = $5, verify_token_expires = $6, verify_token = $7 WHERE email = $3 returning *';
         let params = [
             paused,
             Date.now(),
             req.body.email, 
             req.body.number,
-            req.body.textUpdate
+            req.body.textUpdate,
+            null,
+            null
         ];
         const results = await db.query(sql, params);
         const updatedUser = results.rows[0];
