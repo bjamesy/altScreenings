@@ -118,6 +118,22 @@ module.exports = {
             ];
             const { rows } = await db.query(sql, params);
 
+            const msg = {
+                to: req.body.email,
+                from: `PTST Admin <${process.env.myEmail}>`,
+                subject: 'Verify your email!',
+                html: `<p>Thanks for signing up to Private Screenings Toronto!</p>
+                
+                <ul>
+                    <p>A few things: </p>
+                    <li>Daily updates will be sent out at 10:00am EST</li>
+                    <li>The updates can be muted anytime for a week, a month, or indefinitely <a href="http://${req.headers.host}/users/verify-edit">here</a></li>
+                    <li>If you selected phone updates we recommend you mute the conversation</li>
+                    <li>Any feedback on the application can be sent to ${ process.env.myEmail }</li>
+                </ul>`
+            }
+            await sgMail.send(msg);
+
             req.session.success = `Successfully registered, welcome ${ rows[0].email }!`;
             res.redirect('/');
         } catch (err) {

@@ -21,6 +21,7 @@ function seedTemplateScreenings(screenings) {
 };
 function seedShowtimes(screening) {
     let showtimes = [];
+    
     screening.showtime.forEach(time => {
         showtimes.push(`<li><p>${time}</p></li>`);
     })

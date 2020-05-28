@@ -160,7 +160,7 @@ function getRevue(i) {
                         .replace(/\s\s+/g, '');
 
                     let time = $(elem)
-                        .find('.wp_theatre_event_time')
+                        .find('.wp_theatre_event_starttime')
                         .text()
                         .replace(/\s\s+/g, '');
                     showtime.push(time)
@@ -480,4 +480,12 @@ function getCinesphere(i) {
     })
 };  
 
-module.exports = { getRegent, getRevue, getRoyal, getTiff, getParadise, getCinesphere, getHotDocs };
+module.exports = { 
+    getRegent, 
+    getRevue, 
+    getRoyal, 
+    getTiff, 
+    getParadise, 
+    getCinesphere, 
+    getHotDocs 
+};
