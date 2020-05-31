@@ -2,7 +2,7 @@
 
 <div style="width: 67%; margin: 5px auto" class="navbar-light bg-light">
     <h2 style="margin: 15px auto; text-align: center;">Sign up to never miss a hot screening in Toronto</h2> 
-    <p style="text-align: center; margin: 15px auto">Get notified daily the screenings of local independent theatres in Toronto, by text or email</p>  
+    <p style="text-align: center; margin: 15px auto">Get notified daily of the screenings of local independent theatres in Toronto, by text or email</p>  
     <form method='POST' action='/users/verify'>
       <div style="text-align: center;">
         <input style="width: 50%; margin: 5px auto;" class="form-control" type="email" id="email" name="email" placeholder="Enter your email..." required>
@@ -12,9 +12,9 @@
     </form>
 </div>
 <br>
-<hr>
 
 <% theatres.forEach(theatre => { %>
+  <hr>
     <div class="row">
       <a href="<%= theatre.url %>" class="btn btn-link text-dark"><h2><%= theatre.name %></h2></a> 
     </div>
@@ -50,5 +50,4 @@
     <% } %>
     </div>
     <br>
-    <hr>
 <% }) %>
