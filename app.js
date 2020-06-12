@@ -9,7 +9,6 @@ const session          = require('cookie-session');
 const methodOverride   = require('method-override');
 const indexRouter      = require('./routes/index');
 const usersRouter      = require('./routes/users');
-const { seedDB }       = require('./seeds/index');
 
 const app = express();
 
@@ -34,6 +33,11 @@ app.use(function(req, res, next) {
   next();
 })
 
+const { dailyUpdate }   = require('./db/twilio');
+const { twitterUpdate } = require('./db/twitter');
+const { seedDB }        = require('./seeds/index');
+// twitterUpdate();
+// dailyUpdate();
 // seedDB();
 
 // use ejs-locals for all ejs templates:n

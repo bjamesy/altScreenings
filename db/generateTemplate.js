@@ -1,24 +1,43 @@
-module.exports = {
-    emailTemplate(screenings) {
-        const htmlTemplate = seedTemplateScreenings(screenings);
+function emailTemplate(screenings) {
+    const htmlTemplate = seedTemplateScreenings(screenings);
 
-        return htmlTemplate;
-    }, 
-    textTemplate(screenings) {
-        let text = [];
+    return htmlTemplate;
+};
 
-        screenings.forEach(screening => {
-            text.push(`
-                ${screening.name}, 
+function textTemplate(screenings) {
+    let text = [];
+
+    screenings.forEach(screening => {
+        text.push(`
+            ${screening.name.toUpperCase()}, 
+            ${screening.title}, 
+            ${screening.link}, 
+            ${contentShowtimes(screening)} ---`.replace(/\s\s+/g, ' '))
+    });
+    text.push(`Unsubscribe or snooze alerts here: http://torontoscreenings.herokuapp.com/users/verify-edit`);
+
+    return text.toString();
+};
+
+function twitterTemplate(screenings) {
+    let content = [];
+
+    screenings.forEach((screening, i) => {
+        if (i > 0) {
+            content.push(`
                 ${screening.title}, 
-                ${screening.link}, 
-                ${contentShowtimes(screening)} **********`.replace(/\s\s+/g, ''))
-        });
-        text.push(`Unsubscribe or snooze http://torontoscreenings.herokuapp.com/users/verify-edit`);
+                ${contentShowtimes(screening)},
+                ${screening.link}`.replace(/\s\s+/g, ' ')
+            )
+        }
+        if(i == 0) {
+            content.push(`${screening.name.toUpperCase()}`)
+        }
+    })
 
-        return text.toString();
-    }
-}
+    return content.toString();
+};
+
 function seedTemplateScreenings(screenings) {
     let html = [];
 
@@ -33,6 +52,7 @@ function seedTemplateScreenings(screenings) {
 
     return html.toString().replace(/,/g, "");
 };
+
 function seedShowtimes(screening) {
     let showtimes = [];
     
@@ -40,12 +60,19 @@ function seedShowtimes(screening) {
         showtimes.push(`<li><p>${time}</p></li>`);
     })
     return showtimes.toString().replace(/,/g, "");
-};    
+};  
+
 function contentShowtimes(screening) {
     let showtimes = [];
 
     screening.showtime.forEach(time => {
         showtimes.push(`${time}`);
     })
-    return showtimes.toString().replace(/,/g, "");
+    return showtimes.toString();
+}
+
+module.exports = { 
+    emailTemplate, 
+    textTemplate,
+    twitterTemplate
 }

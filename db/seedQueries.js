@@ -16,8 +16,8 @@ module.exports =  {
             let params1 = [theatre, url]; 
 
             const result = await db.query(theatreSql, params1);
-            console.log('THEATRE RESULT: ', result.rows[0])
-
+            console.log('THEATRE RESULT: ', result.rows[0]);
+            
             for(const screening of screenings) {    
                 let sql = 'INSERT INTO screening (title, link, showtime, theatre_id) VALUES ($1, $2, $3, $4) returning *';
                 let params = [
