@@ -17,10 +17,9 @@ async function twitterUpdate () {
         let screenings = [];
 
         // forEach loop  wouldnt work here since i was running asyncronous processes inside of it 
-        // - 
         for(const theatre of theatres) {
             // if no screenings -> kill process and move on to next element 
-            if (theatre.no_screenings) {
+            if(theatre.no_screenings) {
                 console.log(`${theatre.name} has no corresponding screenings`);
                 continue;
             }
@@ -34,18 +33,19 @@ async function twitterUpdate () {
             rows.forEach(row => {
                 screenings.push(theatre);
                 screenings.push(row);
-                const tweet = twitterTemplate(screenings);
-                client.post('statuses/update', { status: tweet },  function(err, tweet, response) {
-                    console.log('TWEET: ', tweet);  // Tweet body.
+                const tweeter = twitterTemplate(screenings);
+                console.log('TWEETER :', tweeter);
+                client.post('statuses/update', { status: tweeter },  function(err, tweet, response) {
+                    console.log('TWEET: ', tweet.text);  // Tweet body.
                     if(err) {
-                        console.log(err); // Error
+                        console.log('ERROR: ', err); // Error
                     }
                 });            
                 screenings = [];
             });
         };
     } catch (err) {
-        console.log(err);
+        console.log('TWITTER ERROR: ', err);
     }    
 }
 
