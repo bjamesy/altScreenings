@@ -64,7 +64,7 @@ module.exports = {
                 subject: 'Verify your email!',
                 text:`Hi there,
 
-                Thanks for signing up to Independent Screenings Toronto! Before we get started, we just need to confirm this is you.
+                Thanks for signing up for Independent Screenings Toronto! Before we get started, we just need to confirm this is you.
                 
                 http://${req.headers.host}/users/verify/${token}
 
@@ -72,7 +72,7 @@ module.exports = {
                 will be removed.`,
                 html: `<p>Hi there,</p>
 
-                <p>Thanks for signing up to Independent Screenings Toronto! Before we get started, we just need to confirm this is you.</p>
+                <p>Thanks for signing up for Independent Screenings Toronto! Before we get started, we just need to confirm this is you.</p>
                 
                 <p><a href="http://${req.headers.host}/users/verify/${token}">Click here</a></p>
 
