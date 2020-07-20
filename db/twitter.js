@@ -2,7 +2,7 @@ const twitter = require('twitter');
 const db = require('./index');
 const { twitterTemplate } = require('./generateTemplate');
 
-var client = new twitter({
+const client = new twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
     consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
     access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
@@ -14,6 +14,12 @@ async function twitterUpdate () {
         let sql = 'SELECT * FROM theatre';
         const result = await db.query(sql);
         const theatres = result.rows;
+        // check to see if theatre result has a return of less than 7 rows and therefore indicates an error in the scraping process
+        if(theatres.length !== 7) {
+            console.log('insufficient scraping test FAILED - will not TWEET');
+            // kill processes
+            return;
+        } 
         let screenings = [];
 
         // forEach loop  wouldnt work here since i was running asyncronous processes inside of it 

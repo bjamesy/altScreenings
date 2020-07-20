@@ -11,6 +11,17 @@ const client            = new twilio(process.env.accountSid, process.env.authTok
 
 async function dailyUpdate () {
     try {
+        // before sending update CHECK for underscraping - and likely error
+        let theatreSql = 'SELECT * FROM theatre;'
+        const theatreCheck = await db.query(theatreSql);
+        // if detected by a less than 7 theatre check - stop 
+        if (theatreCheck.rows.length !== 7 ) {
+            console.log('TWILIO controller detects that there are less than 7 theatres in the database BOY! : ', theatreCheck.rows);
+            // kill process
+            return;
+        }
+
+        // since the data has already passed the test for accuracy - go on and update
         let screeningSql = 'SELECT * FROM theatre INNER JOIN screening ON theatre.id = screening.theatre_id ORDER BY name;';
         const result = await db.query(screeningSql);
         const screenings = result.rows;
