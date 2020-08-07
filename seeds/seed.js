@@ -8,7 +8,7 @@ const {
     seedTheatre
 } = require('../db/seedQueries');
 
-function getRoyal(i) {
+async function getRoyal(i) {
     let url = 'http://theroyal.to/'
 
     request(url, (err, res, html) => {
@@ -135,7 +135,7 @@ async function getParadise(i) {
         }                            
     }
 };
-function getRevue(i) {
+async function getRevue(i) {
     let url = 'https://revuecinema.ca/';
 
     request(url, (err, res, html) => {
@@ -201,7 +201,7 @@ function getRevue(i) {
         }
     })          
 };
-function getHotDocs(i) {
+async function getHotDocs(i) {
     let url = 'http://hotdocscinema.ca/';
 
     request(url, (err, res, html) => {
@@ -272,7 +272,7 @@ function getHotDocs(i) {
         }
     })          
 };
-function getRegent(i) {
+async function getRegent(i) {
     let url1 = 'https://www.google.com/search?sxsrf=ACYBGNQPcNkDwCjnzSLbYFtAn7NAPlb7nA%3A1581342561585&ei=YV9BXpieI5GRggeDjpiYDg&q=the+regent+theatre+toronto&oq=the+regent+theatre+toronto&gs_l=psy-ab.3..35i39j0i7i30j0i5i30l2.10400.11006..11157...0.3..0.95.488.6......0....1..gws-wiz.......0i71j0i8i7i30j0i8i7i10i30j0i7i5i30j35i304i39.bJ5GMS0FSPk&ved=0ahUKEwjY0pqNkMfnAhWRiOAKHQMHBuMQ4dUDCAs&uact=5';
     let url = "http://regenttoronto.com/";
 
@@ -336,7 +336,7 @@ function getRegent(i) {
         }
     })();
 };
-function getTiff(i) {
+async function getTiff(i) {
     let url = 'https://www.tiff.net/calendar';
     // puppeteer scraping - because browser loading the asyncronous javascript that  
     // loads our calendar data after the html template and therefore not being picked up by cheerio 
@@ -410,7 +410,7 @@ function getTiff(i) {
         }
     })();
 };
-function getCinesphere(i) {
+async function getCinesphere(i) {
     let url = "http://ontarioplace.com/en/cinesphere/";
 
     request(url, (err, res, html) => {
@@ -460,20 +460,20 @@ function getCinesphere(i) {
         } else {
             let error = err.message;
 
-            console.log('Cinisphere error :', err);
+            console.log('Cinesphere error :', err);
 
             if(i >= 7) {
                 console.log('rerun limit met/exceeded !')
             }    
 
             if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
-                console.log('RESEED cinisphere timeout error: ', error); 
+                console.log('RESEED cinesphere timeout error: ', error); 
                 i++;
                 return getCinesphere(i);
             }
         
             if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
-                console.log('RESEED cinisphere querySelectorALL error: ', error);
+                console.log('RESEED cinesphere querySelectorALL error: ', error);
                 i++;
                 return getCinesphere(i);
             }  

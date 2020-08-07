@@ -1,6 +1,7 @@
 const { deleteSeeds } = require('../db/seedQueries');
 const db              = require('../db/index');
 const sgMail          = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const { 
     getRoyal, 
     getParadise, 
@@ -30,21 +31,25 @@ function seedDB() {
     Promise.all(seedPromises).then(() => { 
         // CHECK for underscraping - and likely error
         (async function () {
-            let theatreSql = 'SELECT * FROM theatre;'
-            const theatreCheck = await db.query(theatreSql);
-            // if detected by a less than 7 theatre check - notify me
-            if(theatreCheck.rows.length !== 7 ) {
-                console.log('TWILIO controller detects that there are less than 7 theatres in the database BOY! : ');
-                // send email
-                const msg = {
-                    to: process.env.personalEmail,
-                    from: `IST Admin <${process.env.myEmail}>`,
-                    subject: 'SCRAPING ERROR !',
-                    html: 'get ur ass onto heroku u bum - no ones getting updates dont worry'
-                }
-                await sgMail.send(msg);      
-                return;
-            }    
+            try { 
+                let theatreSql = 'SELECT * FROM theatre;'
+                const theatreCheck = await db.query(theatreSql);
+                // if detected by a less than 7 theatre check - notify me
+                if(theatreCheck.rows.length !== 7 ) {
+                    console.log('TWILIO controller detects that there are less than 7 theatres in the database BOY! : ');
+                    // send email
+                    const msg = {
+                        to: process.env.personalEmail,
+                        from: `IST Admin <${process.env.myEmail}>`,
+                        subject: 'SCRAPING ERROR !',
+                        html: 'get ur ass onto heroku u bum - no ones getting updates dont worry'
+                    }
+                    await sgMail.send(msg);      
+                    return;
+                }        
+            } catch (err) {
+                console.log(err);
+            }
         })();
     })    
 };
