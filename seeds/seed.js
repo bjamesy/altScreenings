@@ -53,18 +53,18 @@ async function getRoyal(i) {
 
             console.log('ROYAL theatre', err);
 
-            if(i >= 7) {
+            if(i >= 4) {
                 console.log('rerun limit met/exceeded !')
             }    
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
-                console.log('RESEED royal timeout error: ', error); 
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
+                console.log(`RESEED royal timeout error ${i}: `, error); 
                 i++;
                 return getRoyal(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
-                console.log('RESEED royal querySelectorALL error: ', error);
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
+                console.log(`RESEED royal querySelectorALL error ${i}: `, error);
                 i++;
                 return getRoyal(i);
             }                            
@@ -118,18 +118,18 @@ async function getParadise(i) {
 
         console.log('PARADISE error: ', err);
 
-        if(i >= 7) {
+        if(i >= 4) {
             console.log('rerun limit met/exceeded !')
         }
 
-        if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7 ) {
-            console.log('RESEED paradise timeout error: ', error); 
+        if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4 ) {
+            console.log(`RESEED paradise timeout error ${i}: `, error); 
             i++;
             return getParadise(i);
         }
     
-        if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
-            console.log('RESEED paradise querySelectorALL error: ', error);
+        if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
+            console.log(`RESEED paradise querySelectorALL error ${i}: `, error);
             i++;
             return getParadise(i);
         }                            
@@ -183,18 +183,18 @@ async function getRevue(i) {
 
             console.log('REVUE error :', err);
 
-            if(i >= 7) {
+            if(i >= 4) {
                 console.log('rerun limit met/exceeded !')
             }    
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
-                console.log('RESEED revue timeout error: ', error); 
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
+                console.log(`RESEED revue timeout error ${i}: `, error); 
                 i++;
                 return getRevue(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
-                console.log('RESEED revue querySelectorALL error: ', error);
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
+                console.log(`RESEED revue querySelectorALL error ${i}: `, error);
                 i++;
                 return getRevue(i);
             }                            
@@ -254,18 +254,18 @@ async function getHotDocs(i) {
 
             console.log('HOTDOCS error :', err);
 
-            if(i >= 7) {
+            if(i >= 4) {
                 console.log('rerun limit met/exceeded !')
             }    
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
-                console.log('RESEED hotdocs timeout error: ', error);
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
+                console.log(`RESEED hotdocs timeout error ${i}: `, error); 
                 i++; 
                 return getHotDocs(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
-                console.log('RESEED hotdocs querySelectorALL error: ', error);
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
+                console.log(`RESEED hotdocs querySelectorALL error ${i}: `, error);
                 i++;
                 return getHotDocs(i);
             }                            
@@ -318,18 +318,18 @@ async function getRegent(i) {
 
             console.log('REGENT error: ', err);
 
-            if(i >= 7) {
+            if(i >= 4) {
                 console.log('rerun limit met/exceeded !')
             }    
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
-                console.log('RESEED regent timeout error: ', error); 
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
+                console.log(`RESEED regent timeout error ${i}: `, error); 
                 i++;
                 return getRegent(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
-                console.log('RESEED regent querySelectorALL error: ', error);
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
+                console.log(`RESEED regent querySelectorALL error ${i}: `, error);
                 i++;
                 return getRegent(i);
             }                            
@@ -392,18 +392,18 @@ async function getTiff(i) {
 
             console.log('TIFF error: ', err);
 
-            if(i >= 7) {
+            if(i >= 4) {
                 console.log('rerun limit met/exceeded !')
             }    
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
-                console.log('RESEED tiff timeout error: ', error); 
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
+                console.log(`RESEED tiff timeout error ${i}: `, error); 
                 i++;
                 return getTiff(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
-                console.log('RESEED tiff querySelectorALL error: ', error);
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
+                console.log(`RESEED tiff querySelectorALL error ${i}: `, error);
                 i++;
                 return getTiff(i);
             }                            
@@ -462,18 +462,18 @@ async function getCinesphere(i) {
 
             console.log('Cinesphere error :', err);
 
-            if(i >= 7) {
+            if(i >= 4) {
                 console.log('rerun limit met/exceeded !')
             }    
 
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 7) {
-                console.log('RESEED cinesphere timeout error: ', error); 
+            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
+                console.log(`RESEED cinesphere timeout error ${i}: `, error); 
                 i++;
                 return getCinesphere(i);
             }
         
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 7) {
-                console.log('RESEED cinesphere querySelectorALL error: ', error);
+            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
+                console.log(`RESEED cinesphere querySelectorALL error ${i}: `, error);
                 i++;
                 return getCinesphere(i);
             }  
