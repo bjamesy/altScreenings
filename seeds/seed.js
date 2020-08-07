@@ -83,7 +83,7 @@ async function getParadise(i) {
             let screening = [];
             let showtime = [];
 
-            let today = document.querySelector('.current-day');
+            let today = document.querySelector('.curren-day');
             let shows = today.querySelectorAll('.film');
 
             Array.from(shows).forEach(el => {
