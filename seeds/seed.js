@@ -7,6 +7,7 @@ const {
     seedScreening,
     seedTheatre
 } = require('../db/seedQueries');
+const { checkScrapingError } = require('../db/twilio');
 
 async function getRoyal(i) {
     let url = 'http://theroyal.to/'
@@ -43,18 +44,20 @@ async function getRoyal(i) {
                     link
                 })
             });    
+
             if(screenings.length && screenings.length > 0) {
                 seedScreening(screenings, "the Royal Theatre", url);
             } else {
-                seedTheatre("the Royal Theatre", url)
-            }
+                seedTheatre("the Royal Theatre", url);
+            }        
         } else {
             let error = err.message;
 
             console.log('ROYAL theatre', err);
 
             if(i >= 4) {
-                console.log('rerun limit met/exceeded !')
+                checkScrapingError();
+                return console.log('rerun limit met/exceeded !');
             }    
 
             if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
@@ -69,7 +72,7 @@ async function getRoyal(i) {
                 return getRoyal(i);
             }                            
         }
-    })    
+    });
 };
 async function getParadise(i) {
     let url = 'http://paradiseonbloor.com/calendar';
@@ -83,7 +86,7 @@ async function getParadise(i) {
             let screening = [];
             let showtime = [];
 
-            let today = document.querySelector('.current-day');
+            let today = document.querySelector('.curren-day');
             let shows = today.querySelectorAll('.film');
 
             Array.from(shows).forEach(el => {
@@ -112,14 +115,15 @@ async function getParadise(i) {
             seedTheatre("Paradise Theatre", url);
         } 
 
-        await browser.close();        
+        await browser.close();       
     } catch(err) {
         let error = err.message;
 
         console.log('PARADISE error: ', err);
 
         if(i >= 4) {
-            console.log('rerun limit met/exceeded !')
+            checkScrapingError();
+            return console.log('rerun limit met/exceeded !')
         }
 
         if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4 ) {
@@ -184,7 +188,8 @@ async function getRevue(i) {
             console.log('REVUE error :', err);
 
             if(i >= 4) {
-                console.log('rerun limit met/exceeded !')
+                checkScrapingError();
+                return console.log('rerun limit met/exceeded !');
             }    
 
             if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
@@ -255,7 +260,8 @@ async function getHotDocs(i) {
             console.log('HOTDOCS error :', err);
 
             if(i >= 4) {
-                console.log('rerun limit met/exceeded !')
+                checkScrapingError();
+                return console.log('rerun limit met/exceeded !')
             }    
 
             if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
@@ -319,7 +325,8 @@ async function getRegent(i) {
             console.log('REGENT error: ', err);
 
             if(i >= 4) {
-                console.log('rerun limit met/exceeded !')
+                checkScrapingError();
+                return console.log('rerun limit met/exceeded !')
             }    
 
             if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
@@ -393,7 +400,8 @@ async function getTiff(i) {
             console.log('TIFF error: ', err);
 
             if(i >= 4) {
-                console.log('rerun limit met/exceeded !')
+                checkScrapingError();
+                return console.log('rerun limit met/exceeded !')
             }    
 
             if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
@@ -463,7 +471,8 @@ async function getCinesphere(i) {
             console.log('Cinesphere error :', err);
 
             if(i >= 4) {
-                console.log('rerun limit met/exceeded !')
+                checkScrapingError();
+                return console.log('rerun limit met/exceeded !')
             }    
 
             if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {

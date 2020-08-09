@@ -68,4 +68,25 @@ async function dailyUpdate () {
     }
 };
 
-module.exports = { dailyUpdate };
+// CHECK for underscraping - and likely error
+async function checkScrapingError() {
+    try { 
+        // send email
+        const msg = {
+            to: process.env.personalEmail,
+            from: `IST Admin <${process.env.myEmail}>`,
+            subject: 'SCRAPING ERROR !',
+            html: 'get ur ass onto heroku u bum - no ones getting updates dont worry'
+        }
+        await sgMail.send(msg);      
+        return console.log('EMAIL SENT upon failing to scrape on 4 attempts');      
+    } catch (err) {
+        console.log('TWILIO error;', err);
+    }
+}
+
+
+module.exports = { 
+    dailyUpdate,
+    checkScrapingError
+};
