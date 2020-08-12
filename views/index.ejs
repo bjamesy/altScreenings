@@ -1,28 +1,33 @@
 <% layout('./layouts/boilerplate') -%>
 
-<div style="width: 67%; margin: 5px auto" class="navbar-light bg-light">
-    <h2 style="margin: 15px auto; text-align: center;">Sign up to never miss a hot screening in Toronto</h2> 
-    <p style="text-align: center; margin: 15px auto">Get notified daily of the screenings of local independent theatres in Toronto, by text or email</p>  
-    <form method='POST' action='/users/verify'>
-      <div style="text-align: center;">
-        <input style="width: 50%; margin: 5px auto;" class="form-control" type="email" id="email" name="email" placeholder="Enter your email..." required>
-        <input style="width: 50%; margin: 5px auto;" class="form-control btn btn-warning" type="submit">
-        <p><i>No spam, ever. Easy unsubscribe.</i></p>
-        <a href="https://twitter.com/indie_films_TO?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @indie_films_TO</a>
-      </div>
-    </form>
+<h1 class="flash alert alert-danger color-red" role="alert">
+  Due to Covid-19 and the widespread closure of theatres in Toronto, notifications and updates will be put on hold for the time being.
+</h1>
+
+<div style="width: 67%; margin: 5px auto" class="card shadow-sm navbar-light bg-light">
+  <h2 style="margin: 15px auto; text-align: center;">Sign up to never miss a hot screening in Toronto</h2> 
+  <p style="text-align: center; margin: 15px auto">Get notified daily of the screenings of local independent theatres in Toronto, by text or email</p>  
+  <form method='POST' action='/users/verify'>
+    <div style="text-align: center;">
+      <input style="width: 50%; margin: 5px auto;" class="form-control" type="email" id="email" name="email" placeholder="Enter your email..." required>
+      <input style="width: 50%; margin: 5px auto;" class="form-control btn btn-warning" type="submit">
+      <p><i>No spam, ever. Easy unsubscribe.</i></p>
+      <a href="https://twitter.com/indie_films_TO?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @indie_films_TO</a>
+    </div>
+  </form>  
 </div>
 <br>
 
 <% theatres.forEach(theatre => { %>
-  <hr>
+  <div>
+    <hr>
     <div class="row">
       <a href="<%= theatre.url %>" class="btn btn-link text-dark"><h2><%= theatre.name %></h2></a> 
     </div>
     <div class="row">
     <% screenings.forEach((screening, i) => { %>
         <% if(screening.theatre_id == theatre.id) { %>
-        <div class="card shadow-sm" style="width: 19rem; margin: 4px;">
+        <div class="card shadow-sm bg-light" style="width: 19rem; margin: 4px;">
             <div class="card-body">
                 <h6 class="card-title">
                   <%= screening.title %>
@@ -50,5 +55,6 @@
         </div>        
     <% } %>
     </div>
-    <br>
+    <br>  
+  </div>
 <% }) %>
