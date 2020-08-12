@@ -15,7 +15,7 @@ module.exports = {
             console.log('rerun limit met/exceeded !');
             return;
         }    
-
+        console.log("we're in here , uhh ", i);
         if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
             console.log(`RESEED ${theatre} timeout error ${i}: `, error); 
             i++;
