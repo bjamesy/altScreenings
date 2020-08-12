@@ -79,7 +79,7 @@ async function scrapingErrorEmail() {
             html: 'get ur ass onto heroku u bum - no ones getting updates dont worry'
         }
         await sgMail.send(msg);      
-        return console.log('EMAIL SENT upon failing to scrape on 4 attempts');      
+        return console.log('EMAIL SENT upon failing to scrape on 3 attempts');      
     } catch (err) {
         console.log('TWILIO scraping error: ', err);
     }
