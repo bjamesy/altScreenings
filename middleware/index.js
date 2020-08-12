@@ -6,7 +6,7 @@ module.exports = {
         Promise.resolve(fn(req, res, next))
                .catch(next);
     },
-    async seedErrorHandler(err, theatre, rerun, i) {
+    seedErrorHandler: async function(err, theatre, rerun, i) {
         let error = err.message;
         if(i >= 4) {
             console.log(i);
