@@ -1,13 +1,13 @@
-const twilio            = require('twilio');
-const db                = require('../db/index');    
-const sgMail            = require('@sendgrid/mail');
+const twilio = require('twilio');
+const db     = require('../db/index');    
+const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const { 
     emailTemplate,
     textTemplate
-}                       = require('../db/generateTemplate');
+}            = require('../db/generateTemplate');
 // twilio CONFIG *********
-const client            = new twilio(process.env.accountSid, process.env.authToken);
+const client = new twilio(process.env.accountSid, process.env.authToken);
 
 async function dailyUpdate () {
     try {
@@ -69,7 +69,7 @@ async function dailyUpdate () {
 };
 
 // CHECK for underscraping - and likely error
-async function checkScrapingError() {
+async function scrapingErrorEmail() {
     try { 
         // send email
         const msg = {
@@ -81,7 +81,7 @@ async function checkScrapingError() {
         await sgMail.send(msg);      
         return console.log('EMAIL SENT upon failing to scrape on 4 attempts');      
     } catch (err) {
-        console.log('TWILIO error;', err);
+        console.log('TWILIO scraping error: ', err);
     }
 }
 

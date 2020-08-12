@@ -9,6 +9,8 @@ module.exports = {
     async seedErrorHandler(err, theatre, rerun, i) {
         let error = err.message;
         if(i >= 4) {
+            console.log(i);
+
             checkScrapingError();
             return console.log('rerun limit met/exceeded !');
         }    
