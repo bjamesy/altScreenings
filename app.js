@@ -38,7 +38,7 @@ const { twitterUpdate } = require('./db/twitter');
 const { seedDB }        = require('./seeds/index');
 // twitterUpdate();
 // dailyUpdate();
-// seedDB();
+seedDB();
 
 // use ejs-locals for all ejs templates:n
 app.engine('ejs', engine);

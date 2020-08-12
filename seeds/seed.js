@@ -7,7 +7,7 @@ const {
     seedScreening,
     seedTheatre
 } = require('../db/seedQueries');
-const { checkScrapingError } = require('../db/twilio');
+const { seedErrorHandler } = require('../middleware');
 
 async function getRoyal(i) {
     let url = 'http://theroyal.to/'
@@ -51,26 +51,8 @@ async function getRoyal(i) {
                 seedTheatre("the Royal Theatre", url);
             }        
         } else {
-            let error = err.message;
-
-            console.log('ROYAL theatre', err);
-
-            if(i >= 4) {
-                checkScrapingError();
-                return console.log('rerun limit met/exceeded !');
-            }    
-
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
-                console.log(`RESEED royal timeout error ${i}: `, error); 
-                i++;
-                return getRoyal(i);
-            }
-        
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
-                console.log(`RESEED royal querySelectorALL error ${i}: `, error);
-                i++;
-                return getRoyal(i);
-            }                            
+            seedErrorHandler(err, "the Royal Theatre", getRoyal, i);
+            return console.log("getRoyal completed scraping");
         }
     });
 };
@@ -86,7 +68,7 @@ async function getParadise(i) {
             let screening = [];
             let showtime = [];
 
-            let today = document.querySelector('.current-day');
+            let today = document.querySelector('.curren-day');
             let shows = today.querySelectorAll('.film');
 
             Array.from(shows).forEach(el => {
@@ -117,26 +99,8 @@ async function getParadise(i) {
 
         await browser.close();       
     } catch(err) {
-        let error = err.message;
-
-        console.log('PARADISE error: ', err);
-
-        if(i >= 4) {
-            checkScrapingError();
-            return console.log('rerun limit met/exceeded !')
-        }
-
-        if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4 ) {
-            console.log(`RESEED paradise timeout error ${i}: `, error); 
-            i++;
-            return getParadise(i);
-        }
-    
-        if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
-            console.log(`RESEED paradise querySelectorALL error ${i}: `, error);
-            i++;
-            return getParadise(i);
-        }                            
+        seedErrorHandler(err, "Paradise", getParadise, i);
+        return console.log("getParadise completed scraping");
     }
 };
 async function getRevue(i) {
@@ -183,26 +147,8 @@ async function getRevue(i) {
                 seedTheatre("Revue Theatre", url);
             }
         } else {
-            let error = err.message;
-
-            console.log('REVUE error :', err);
-
-            if(i >= 4) {
-                checkScrapingError();
-                return console.log('rerun limit met/exceeded !');
-            }    
-
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
-                console.log(`RESEED revue timeout error ${i}: `, error); 
-                i++;
-                return getRevue(i);
-            }
-        
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
-                console.log(`RESEED revue querySelectorALL error ${i}: `, error);
-                i++;
-                return getRevue(i);
-            }                            
+            seedErrorHandler(err, "Revue Theatre", getRevue, i);
+            return console.log("getRevue completed scraping");
         }
     })          
 };
@@ -255,26 +201,8 @@ async function getHotDocs(i) {
                 seedTheatre("HotDocs Theatre", url);
             }
         } else {
-            let error = err.message;
-
-            console.log('HOTDOCS error :', err);
-
-            if(i >= 4) {
-                checkScrapingError();
-                return console.log('rerun limit met/exceeded !')
-            }    
-
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
-                console.log(`RESEED hotdocs timeout error ${i}: `, error); 
-                i++; 
-                return getHotDocs(i);
-            }
-        
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
-                console.log(`RESEED hotdocs querySelectorALL error ${i}: `, error);
-                i++;
-                return getHotDocs(i);
-            }                            
+            seedErrorHandler(err, "HotDocs Theatre", getHotDocs, i);
+            return console.log("getHotDocs completed scraping");
         }
     })          
 };
@@ -320,26 +248,8 @@ async function getRegent(i) {
 
             await browser.close();    
         } catch(err) {
-            let error = err.message;
-
-            console.log('REGENT error: ', err);
-
-            if(i >= 4) {
-                checkScrapingError();
-                return console.log('rerun limit met/exceeded !')
-            }    
-
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
-                console.log(`RESEED regent timeout error ${i}: `, error); 
-                i++;
-                return getRegent(i);
-            }
-        
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
-                console.log(`RESEED regent querySelectorALL error ${i}: `, error);
-                i++;
-                return getRegent(i);
-            }                            
+            seedErrorHandler(err, "Regent Theatre", getRegent, i);
+            return console.log("getRegent completed scraping");
         }
     })();
 };
@@ -395,26 +305,8 @@ async function getTiff(i) {
 
             await browser.close();        
         } catch(err) {
-            let error = err.message;
-
-            console.log('TIFF error: ', err);
-
-            if(i >= 4) {
-                checkScrapingError();
-                return console.log('rerun limit met/exceeded !')
-            }    
-
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
-                console.log(`RESEED tiff timeout error ${i}: `, error); 
-                i++;
-                return getTiff(i);
-            }
-        
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
-                console.log(`RESEED tiff querySelectorALL error ${i}: `, error);
-                i++;
-                return getTiff(i);
-            }                            
+            seedErrorHandler(err, "Tiff Bell Lightbox", getTiff, i);
+            return console.log("getTiff completed scraping");
         }
     })();
 };
@@ -466,26 +358,8 @@ async function getCinesphere(i) {
                 seedTheatre("Cinesphere Theatre", url);
             }
         } else {
-            let error = err.message;
-
-            console.log('Cinesphere error :', err);
-
-            if(i >= 4) {
-                checkScrapingError();
-                return console.log('rerun limit met/exceeded !')
-            }    
-
-            if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
-                console.log(`RESEED cinesphere timeout error ${i}: `, error); 
-                i++;
-                return getCinesphere(i);
-            }
-        
-            if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
-                console.log(`RESEED cinesphere querySelectorALL error ${i}: `, error);
-                i++;
-                return getCinesphere(i);
-            }  
+            seedErrorHandler(err, "Cinisphere Theatre", getCinesphere, i);
+            return console.log("getCinesphere completed scraping");
         }
     })
 };  
