@@ -11,8 +11,9 @@ module.exports = {
         if(i >= 4) {
             console.log(i);
 
-            scrapingErrorEmail();
-            return console.log('rerun limit met/exceeded !');
+            await scrapingErrorEmail();
+            console.log('rerun limit met/exceeded !');
+            return;
         }    
 
         if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 4) {
@@ -24,11 +25,6 @@ module.exports = {
         if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
             console.log(`RESEED ${theatre} querySelectorALL error ${i}: `, error);
             i++;
-            if(i === 4) {
-                console.log(rerun);
-                console.log(i);
-                return rerun(i);  
-            }
             rerun(i);
         }                            
     }
