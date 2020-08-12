@@ -88,5 +88,5 @@ async function scrapingErrorEmail() {
 
 module.exports = { 
     dailyUpdate,
-    checkScrapingError
+    scrapingErrorEmail
 };

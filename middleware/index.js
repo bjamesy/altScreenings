@@ -1,4 +1,4 @@
-const { checkScrapingError } = require('../db/twilio');
+const { scrapingErrorEmail } = require('../db/twilio');
 
 module.exports = {
     errorHandler: (fn) => 
@@ -11,7 +11,7 @@ module.exports = {
         if(i >= 4) {
             console.log(i);
 
-            checkScrapingError();
+            scrapingErrorEmail();
             return console.log('rerun limit met/exceeded !');
         }    
 
