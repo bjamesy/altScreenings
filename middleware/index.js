@@ -24,7 +24,7 @@ module.exports = {
         if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 4) {
             console.log(`RESEED ${theatre} querySelectorALL error ${i}: `, error);
             i++;
-            if(i = 3) {
+            if(i === 3) {
                 console.log(rerun);
                 console.log(i)    
             }

@@ -83,7 +83,7 @@ async function scrapingErrorEmail() {
     } catch (err) {
         console.log('TWILIO scraping error: ', err);
     }
-}
+};
 
 
 module.exports = { 
