@@ -65,10 +65,10 @@ a {
 }
 
 .slideshow li:nth-child(1) { 
-  background-image: url(../images/hotDocsBanner.jpg); 
+  background-image: url(../images/cinesphereBanner.jpg); 
 }
 .slideshow li:nth-child(2) { 
-  background-image: url(../images/paradiseBanner.jpg);
+  background-image: url(../images/regentBanner.jpg);
   animation-delay: 7s; 
 }
 .slideshow li:nth-child(3) { 
@@ -84,11 +84,11 @@ a {
   animation-delay: 30s; 
 }
 .slideshow li:nth-child(6) { 
-  background-image: url(../images/cinesphereBanner.jpg);
+  background-image: url(../images/hotDocsBanner.jpg);
   animation-delay: 38s; 
 }
 .slideshow li:nth-child(7) { 
-  background-image: url(../images/regentBanner.jpg);
+  background-image: url(../images/paradiseBanner.jpg);
   animation-delay: 45s; 
 }
 
