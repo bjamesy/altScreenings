@@ -3,6 +3,14 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+#screening {
+  background-color: rgba(255,255,255,0.2);
+}
+
+#form {
+  background-color: rgba(255,255,255,0.4);
+}
+
 a {
   color: #00B7FF;
 }
@@ -91,11 +99,11 @@ a {
     animation-timing-function: ease-in;
   }
   10% {
-    opacity: 0.4;
+    opacity: 0.30;
     animation-timing-function: ease-out;
   }
   20% {
-    opacity: 0.4
+    opacity: 0.30
   }
   30% {
     opacity: 0

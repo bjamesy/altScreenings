@@ -1,5 +1,5 @@
 <% layout('./layouts/boilerplate') -%>
-<div style="width: 45%; margin: auto;">  
+<div style="width: 45%; margin: 5px auto;" id="form" class="card">  
     <h3 style="text-align: center;">Complete Notification Preferences</h3>      
     <form method='POST' action='/users/subscribe/<%= user.verify_token %>?_method=PUT'>
         <div style="margin: 10px auto;">
@@ -9,7 +9,7 @@
                 <label for="text preferred">Check box if text updates preferred</label>
                 <input type="checkbox" name="textUpdate">    
             </div>
-            <input style="margin: auto;" class="form-control btn btn-primary" type="submit" value="Complete subscription">
+            <input style="margin: auto; width: 80%;" class="form-control btn-primary" type="submit" value="Complete subscription">
         </div>    
     </form>    
 </div>    

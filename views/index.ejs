@@ -4,7 +4,7 @@
   Due to Covid-19 and the widespread closure of theatres in Toronto, notifications and updates will be put on hold for the time being.
 </h1>
 
-<div style="width: 67%; margin: 5px auto" class="card shadow-sm navbar-light bg-light">
+<div style="width: 67%; margin: 5px auto;" class="card" id="form">
   <h2 style="margin: 15px auto; text-align: center;">Sign up to never miss a hot screening in Toronto</h2> 
   <p style="text-align: center; margin: 15px auto">Get notified daily of the screenings of local independent theatres in Toronto, by text or email</p>  
   <form method='POST' action='/users/verify'>
@@ -22,12 +22,12 @@
   <div>
     <hr>
     <div class="row">
-      <a href="<%= theatre.url %>" class="btn btn-link text-dark"><h2><%= theatre.name %></h2></a> 
+      <a href="<%= theatre.url %>" class="navbar-brand btn btn-link text-dark"><h2><%= theatre.name %></h2></a> 
     </div>
     <div class="row">
     <% screenings.forEach((screening, i) => { %>
         <% if(screening.theatre_id == theatre.id) { %>
-        <div class="card shadow-sm bg-light" style="width: 19rem; margin: 4px;">
+        <div class="card shadow-sm" id="screening" style="width: 19rem; margin: 4px;">
             <div class="card-body">
                 <h6 class="card-title">
                   <%= screening.title %>
@@ -48,7 +48,7 @@
       <% } %>
     <% }) %>
     <% if(theatre.no_screenings) { %>
-        <div style="width: 19rem; margin: 4px;">
+        <div class="card" style="width: 19rem; margin: 4px;" id="screening">
               <p class="card-text" style="text-align: center;">
                 <i>** No screenings at this location today **</i>
               </p>
