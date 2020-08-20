@@ -8,24 +8,27 @@ module.exports = {
     },
     seedErrorHandler: async function(err, theatre, rerun, i) {
         let error = err.message;
+
         if(i >= 3) {
             console.log(i);
 
-            await scrapingErrorEmail();
+            await scrapingErrorEmail(theatre);
             console.log('rerun limit met/exceeded !');
             return;
         }    
-        console.log("we're in here , uhh ", i);
         if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 3) {
             console.log(`RESEED ${theatre} timeout error ${i}: `, error); 
             i++;
             rerun(i);
         }
-    
         if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 3) {
             console.log(`RESEED ${theatre} querySelectorALL error ${i}: `, error);
             i++;
             rerun(i);
-        }                            
+        }            
+        else {
+            await scrapingErrorEmail(theatre);
+            console.log(`${theatre} exception ERROR: `, error);
+        }                
     }
 };

@@ -278,7 +278,7 @@ async function getTiff(i) {
                         let links = linkDiv.querySelector('.style__link___140bA').getAttribute("href");
                         let urLink = 'https://www.tiff.net';
                         let link = urLink + links;
-                        // multiple showtimes so have to grab nodelist prior to loooping through 
+                        // multiple showtimes so have to grab nodelist prior to looping through 
                         let times = el.querySelectorAll('.style__screeningButton___22uMG');
                         Array.from(times).forEach(el => { 
                             showtime.push(el.innerText);
@@ -321,7 +321,8 @@ async function getCinesphere(i) {
             let showtime = [];
 
             let film = $('.cineNowPlaying');
-            let films = $(film).find('.tixLinks');
+            let filmz = $('.postitem-1');
+            let films = $(filmz).find('.tixLinks');
 
             if(films.length) {
                 let title = $(film)

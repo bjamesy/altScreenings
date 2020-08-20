@@ -69,17 +69,17 @@ async function dailyUpdate () {
 };
 
 // CHECK for underscraping - and likely error
-async function scrapingErrorEmail() {
+async function scrapingErrorEmail(theatre) {
     try { 
         // send email
         const msg = {
             to: process.env.personalEmail,
             from: `IST Admin <${process.env.myEmail}>`,
             subject: 'SCRAPING ERROR !',
-            html: 'get ur ass onto heroku u bum - no ones getting updates dont worry'
+            html: `get ur ass onto heroku u bum - no ones getting updates dont worry ${theatre}`
         }
         await sgMail.send(msg);      
-        return console.log('EMAIL SENT upon failing to scrape on 3 attempts');      
+        return console.log('EMAIL SENT scraping error');      
     } catch (err) {
         console.log('TWILIO scraping error: ', err);
     }

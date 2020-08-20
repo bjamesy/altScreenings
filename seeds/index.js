@@ -1,5 +1,4 @@
 const { deleteSeeds } = require('../db/seedQueries');
-const db              = require('../db/index');
 const sgMail          = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const { 
@@ -25,6 +24,5 @@ function seedDB() {
     getRevue(0);
     getHotDocs(0);
 };
-
 
 module.exports = { seedDB }; 
