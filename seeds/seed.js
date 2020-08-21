@@ -51,7 +51,7 @@ async function getRoyal(i) {
                 seedTheatre("the Royal Theatre", url);
             }        
         } else {
-            seedErrorHandler(err, "the Royal Theatre", getRoyal, i, url);
+            seedErrorHandler(err, "the Royal Theatre", getRoyal, i);
             return console.log("getRoyal completed scraping");
         }
     });
@@ -100,7 +100,7 @@ async function getParadise(i) {
 
         await browser.close();       
     } catch(err) {
-        seedErrorHandler(err, "Paradise", getParadise, i, url);
+        seedErrorHandler(err, "Paradise", getParadise, i);
         return console.log("getParadise completed scraping");
     }
 };
@@ -149,7 +149,7 @@ async function getRevue(i) {
                 seedTheatre("Revue Theatre", url);
             }
         } else {
-            seedErrorHandler(err, "Revue Theatre", getRevue, i, url);
+            seedErrorHandler(err, "Revue Theatre", getRevue, i);
             return console.log("getRevue completed scraping");
         }
     })          
@@ -204,7 +204,7 @@ async function getHotDocs(i) {
                 seedTheatre("HotDocs Theatre", url);
             }
         } else {
-            seedErrorHandler(err, "HotDocs Theatre", getHotDocs, i, url);
+            seedErrorHandler(err, "HotDocs Theatre", getHotDocs, i);
             return console.log("getHotDocs completed scraping");
         }
     })          
@@ -252,7 +252,7 @@ async function getRegent(i) {
 
             await browser.close();    
         } catch(err) {
-            seedErrorHandler(err, "Regent Theatre", getRegent, i, url);
+            seedErrorHandler(err, "Regent Theatre", getRegent, i);
             return console.log("getRegent completed scraping");
         }
     })();
@@ -301,7 +301,7 @@ async function getTiff(i) {
 
                 return screening;    
             });
-            
+
             if(screenings.length && screenings.length > 0) {
                 seedScreening(screenings, "Tiff Bell Lightbox", url);
             } else {
@@ -310,7 +310,7 @@ async function getTiff(i) {
 
             await browser.close();        
         } catch(err) {
-            seedErrorHandler(err, "Tiff Bell Lightbox", getTiff, i, url);
+            seedErrorHandler(err, "Tiff Bell Lightbox", getTiff, i);
             return console.log("getTiff completed scraping");
         }
     })();
@@ -364,7 +364,7 @@ async function getCinesphere(i) {
                 seedTheatre("Cinesphere Theatre", url);
             }
         } else {
-            seedErrorHandler(err, "Cinisphere Theatre", getCinesphere, i, url);
+            seedErrorHandler(err, "Cinisphere Theatre", getCinesphere, i);
             return console.log("getCinesphere completed scraping");
         }
     })

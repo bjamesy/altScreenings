@@ -1,5 +1,4 @@
 const { scrapingErrorEmail } = require('../db/twilio');
-const { seedTheatre }        = require('../db/seedQueries');
 
 module.exports = {
     errorHandler: (fn) => 
@@ -7,7 +6,7 @@ module.exports = {
         Promise.resolve(fn(req, res, next))
                .catch(next);
     },
-    seedErrorHandler: async function(err, theatre, rerun, i, url) {
+    seedErrorHandler: async function(err, theatre, rerun, i) {
         let error = err.message;
 
         if(i >= 3) {
@@ -28,7 +27,6 @@ module.exports = {
             rerun(i);
         }            
         else {
-            await seedTheatre(theatre, url);
             await scrapingErrorEmail(theatre, error);
             console.log(`${theatre} exception ERROR: `, error);
         }                
