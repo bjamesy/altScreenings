@@ -1,4 +1,5 @@
 const { scrapingErrorEmail } = require('../db/twilio');
+const { seedTheatre }        = require('../db/seedQueries');
 
 module.exports = {
     errorHandler: (fn) => 
@@ -6,13 +7,13 @@ module.exports = {
         Promise.resolve(fn(req, res, next))
                .catch(next);
     },
-    seedErrorHandler: async function(err, theatre, rerun, i) {
+    seedErrorHandler: async function(err, theatre, rerun, i, url) {
         let error = err.message;
 
         if(i >= 3) {
             console.log(i);
 
-            await scrapingErrorEmail(theatre);
+            await scrapingErrorEmail(theatre, error);
             console.log('rerun limit met/exceeded !');
             return;
         }    
@@ -27,7 +28,8 @@ module.exports = {
             rerun(i);
         }            
         else {
-            await scrapingErrorEmail(theatre);
+            await seedTheatre(theatre, url);
+            await scrapingErrorEmail(theatre, error);
             console.log(`${theatre} exception ERROR: `, error);
         }                
     }

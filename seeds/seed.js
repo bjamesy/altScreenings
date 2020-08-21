@@ -51,7 +51,7 @@ async function getRoyal(i) {
                 seedTheatre("the Royal Theatre", url);
             }        
         } else {
-            seedErrorHandler(err, "the Royal Theatre", getRoyal, i);
+            seedErrorHandler(err, "the Royal Theatre", getRoyal, i, url);
             return console.log("getRoyal completed scraping");
         }
     });
@@ -91,6 +91,7 @@ async function getParadise(i) {
 
             return screening;
         });
+
         if(screenings.length && screenings.length > 0 ) {
             seedScreening(screenings, "Paradise Theatre", url);
         } else {
@@ -99,7 +100,7 @@ async function getParadise(i) {
 
         await browser.close();       
     } catch(err) {
-        seedErrorHandler(err, "Paradise", getParadise, i);
+        seedErrorHandler(err, "Paradise", getParadise, i, url);
         return console.log("getParadise completed scraping");
     }
 };
@@ -141,13 +142,14 @@ async function getRevue(i) {
                     })
                 });
             });
+
             if(screenings.length && screenings.length > 0) { 
                 seedScreening(screenings, "Revue Theatre", url);
             } else {
                 seedTheatre("Revue Theatre", url);
             }
         } else {
-            seedErrorHandler(err, "Revue Theatre", getRevue, i);
+            seedErrorHandler(err, "Revue Theatre", getRevue, i, url);
             return console.log("getRevue completed scraping");
         }
     })          
@@ -195,13 +197,14 @@ async function getHotDocs(i) {
                 })
                 showtime = [];
             });
+
             if(screenings.length && screenings.length > 0) {
                 seedScreening(screenings, 'HotDocs Theatre', url);
             } else {
                 seedTheatre("HotDocs Theatre", url);
             }
         } else {
-            seedErrorHandler(err, "HotDocs Theatre", getHotDocs, i);
+            seedErrorHandler(err, "HotDocs Theatre", getHotDocs, i, url);
             return console.log("getHotDocs completed scraping");
         }
     })          
@@ -239,7 +242,8 @@ async function getRegent(i) {
 
                     return screening;    
                 }
-            })
+            });
+
             if(screenings && screenings.length > 0) {
                 seedScreening(screenings, "Regent Theatre", url);
             } else {
@@ -248,7 +252,7 @@ async function getRegent(i) {
 
             await browser.close();    
         } catch(err) {
-            seedErrorHandler(err, "Regent Theatre", getRegent, i);
+            seedErrorHandler(err, "Regent Theatre", getRegent, i, url);
             return console.log("getRegent completed scraping");
         }
     })();
@@ -297,6 +301,7 @@ async function getTiff(i) {
 
                 return screening;    
             });
+            
             if(screenings.length && screenings.length > 0) {
                 seedScreening(screenings, "Tiff Bell Lightbox", url);
             } else {
@@ -305,7 +310,7 @@ async function getTiff(i) {
 
             await browser.close();        
         } catch(err) {
-            seedErrorHandler(err, "Tiff Bell Lightbox", getTiff, i);
+            seedErrorHandler(err, "Tiff Bell Lightbox", getTiff, i, url);
             return console.log("getTiff completed scraping");
         }
     })();
@@ -359,7 +364,7 @@ async function getCinesphere(i) {
                 seedTheatre("Cinesphere Theatre", url);
             }
         } else {
-            seedErrorHandler(err, "Cinisphere Theatre", getCinesphere, i);
+            seedErrorHandler(err, "Cinisphere Theatre", getCinesphere, i, url);
             return console.log("getCinesphere completed scraping");
         }
     })

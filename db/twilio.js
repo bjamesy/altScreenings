@@ -69,14 +69,14 @@ async function dailyUpdate () {
 };
 
 // CHECK for underscraping - and likely error
-async function scrapingErrorEmail(theatre) {
+async function scrapingErrorEmail(theatre, err) {
     try { 
         // send email
         const msg = {
             to: process.env.personalEmail,
             from: `IST Admin <${process.env.myEmail}>`,
             subject: 'SCRAPING ERROR !',
-            html: `get ur ass onto heroku u bum - no ones getting updates dont worry ${theatre}`
+            html: `get ur ass onto heroku u bum - no ones getting updates dont worry ${ theatre }. ERROR: ${ err }`
         }
         await sgMail.send(msg);      
         return console.log('EMAIL SENT scraping error');      
