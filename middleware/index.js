@@ -19,16 +19,16 @@ module.exports = {
         if(error.includes('Navigation timeout of 30000 ms exceeded') && i < 3) {
             console.log(`RESEED ${theatre} timeout error ${i}: `, error); 
             i++;
-            rerun(i);
+            return rerun(i);
         }
         if(error.includes('Cannot read property') && error.includes('querySelectorAll') && error.includes('null') && i < 3) {
             console.log(`RESEED ${theatre} querySelectorALL error ${i}: `, error);
             i++;
-            rerun(i);
+            return rerun(i);
         }            
         else {
             await scrapingErrorEmail(theatre, error);
-            console.log(`${theatre} exception ERROR: `, error);
+            return console.log(`${theatre} exception ERROR: `, error);
         }                
     }
 };
