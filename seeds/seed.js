@@ -214,7 +214,7 @@ async function getRegent(i) {
     let url = "http://regenttoronto.com/";
 
     (async () => {
-        try{
+        try {
             const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
             const page = await browser.newPage();
             await page.goto(url1, { waitUntil: 'networkidle2' });
@@ -326,7 +326,7 @@ async function getCinesphere(i) {
             let showtime = [];
 
             let film = $('.cineNowPlaying');
-            let filmz = $('.postitem-1');
+            let filmz = $(film).find('.postitem-1');
             let films = $(filmz).find('.tixLinks');
 
             if(films.length) {
@@ -364,7 +364,7 @@ async function getCinesphere(i) {
                 seedTheatre("Cinesphere Theatre", url);
             }
         } else {
-            seedErrorHandler(err, "Cinisphere Theatre", getCinesphere, i);
+            seedErrorHandler(err, "Cinesphere Theatre", getCinesphere, i);
             return console.log("getCinesphere completed scraping");
         }
     })
