@@ -14,12 +14,13 @@ async function twitterUpdate () {
         let sql = 'SELECT * FROM theatre';
         const result = await db.query(sql);
         const theatres = result.rows;
+
         // check to see if theatre result has a return of less than 7 rows and therefore indicates an error in the scraping process
-        if(theatres.length !== 7) {
-            console.log('insufficient scraping test FAILED - will not TWEET');
-            // kill processes
-            return;
-        } 
+        // if(theatres.length !== 7) {
+        //     console.log('insufficient scraping test FAILED - will not TWEET');
+        //     // kill processes
+        //     return;
+        // } 
         let screenings = [];
 
         // forEach loop  wouldnt work here since i was running asyncronous processes inside of it 
@@ -39,12 +40,14 @@ async function twitterUpdate () {
             rows.forEach(row => {
                 screenings.push(theatre);
                 screenings.push(row);
+                // twitter appropriate post generator function
                 const tweeter = twitterTemplate(screenings);
-                console.log('TWEETER :', tweeter);
-                client.post('statuses/update', { status: tweeter },  function(err, tweet, response) {
-                    console.log('TWEET: ', tweet.text);  // Tweet body.
+
+                // twitter session
+                client.post('statuses/update', { status: tweeter }, function(err, tweet, response) {
+                    console.log('TWEET: ', tweet.text);  
                     if(err) {
-                        console.log('ERROR: ', err); // Error
+                        console.log('ERROR: ', err); 
                     }
                 });            
                 screenings = [];

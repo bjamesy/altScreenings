@@ -11,8 +11,9 @@ module.exports = {
 
         if(i >= 3) {
             console.log(i);
-
+            // send email to alert me of error
             await scrapingErrorEmail(theatre, error);
+
             console.log('rerun limit met/exceeded !');
             return;
         }    

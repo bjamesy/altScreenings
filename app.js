@@ -33,12 +33,12 @@ app.use(function(req, res, next) {
   next();
 })
 
-const { dailyUpdate }   = require('./db/twilio');
-const { twitterUpdate } = require('./db/twitter');
-const { seedDB }        = require('./seeds/index');
-// twitterUpdate();
+// const { dailyUpdate }   = require('./db/twilio');
+// const { twitterUpdate } = require('./db/twitter');
+// const { seedDB }        = require('./seeds/index');
 // dailyUpdate();
 // seedDB();
+// twitterUpdate();
 
 // use ejs-locals for all ejs templates:n
 app.engine('ejs', engine);
