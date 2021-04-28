@@ -7,12 +7,13 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 module.exports = {
     // GET landing page
     async getLanding (req, res, next) {
+        console.log('LANDING ROUTE ATTEMMPT ! ')
         let theatreQuery = 'SELECT * FROM theatre';
         let screeningQuery = 'SELECT * FROM screening';
         const { rows } = await db.query(theatreQuery);
         const result = await db.query(screeningQuery);
     
-        console.log(result.rowCount);
+        console.log('ROWCOUNT: ', result.rowCount);
     
         return res.render("index", { 
             title: 'IST',
