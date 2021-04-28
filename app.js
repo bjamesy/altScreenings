@@ -12,7 +12,7 @@ const usersRouter      = require('./routes/users');
 
 const app = express();
 
-// CONFIG sessions ! 
+// CONFIG sessions!
 app.use(session({
   name: "session",
   keys: ["key 1", "key 2"]
