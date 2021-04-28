@@ -10,6 +10,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             pool.query(sql, params)
                 .then(result => {
+                    console.log('QUERY ! ')
                     resolve(result);
                 })
                 .catch(err => {
