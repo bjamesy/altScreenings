@@ -9,18 +9,18 @@ module.exports = {
     async getLanding (req, res, next) {
         console.log('LANDING ROUTE ATTEMMPT ! : ', req.headers )
 
-        let theatreQuery = 'SELECT * FROM theatre';
-        let screeningQuery = 'SELECT * FROM screening';
-        const { rows } = await db.query(theatreQuery);
-        const result = await db.query(screeningQuery);
+        // let theatreQuery = 'SELECT * FROM theatre';
+        // let screeningQuery = 'SELECT * FROM screening';
+        // const { rows } = await db.query(theatreQuery);
+        // const result = await db.query(screeningQuery);
     
-        console.log('ROWCOUNT: ', result.rowCount);
+        // console.log('ROWCOUNT: ', result.rowCount);
     
         return res.render("index", { 
             title: 'IST',
-            screenings: result.rows,
-            theatres: rows,
-            screeningCount: result.rowCount
+            screenings: [],
+            theatres: [],
+            screeningCount: 0
         });  
     }, 
     // GET verification page 
