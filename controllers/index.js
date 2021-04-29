@@ -7,7 +7,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 module.exports = {
     // GET landing page
     async getLanding (req, res, next) {
-        console.log('LANDING ROUTE ATTEMMPT ! ')
+        console.log('LANDING ROUTE ATTEMMPT ! : ', req.headers )
+
         let theatreQuery = 'SELECT * FROM theatre';
         let screeningQuery = 'SELECT * FROM screening';
         const { rows } = await db.query(theatreQuery);
