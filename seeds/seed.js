@@ -270,8 +270,6 @@ async function getTiff(i) {
             });
 
             let screenings = await page.evaluate(() => {
-                console.log('evaluating this b *************');
-
                 let screening = [];
                 let showtime = [];
 
@@ -373,6 +371,98 @@ async function getCinesphere(i) {
         }
     })
 };  
+async function getFox(i) {
+    let url = "http://www.foxtheatre.ca/schedule/";
+
+    (async () => {
+        try {
+            const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+            const page = await browser.newPage();
+            await page.goto(url, { waitUntil: 'networkidle2' });
+
+            let screenings = await page.evaluate(() => {
+                let screening = [];
+                let showtime = [];
+
+                let films = document.querySelectorAll('.fc-event-today');
+
+                if(films.length) {
+                    Array.from(films).forEach(el => {
+                        showtime.push(el.querySelector('.fc-list-event-time').innerText);
+                        
+                        let link = el.querySelector('.fc-list-event-title').firstElementChild.getAttribute('href');
+                        let title = el.querySelector('.fc-list-event-title').firstElementChild.innerText;  
+                        
+                        screening.push({
+                            showtime, 
+                            link, 
+                            title
+                        })
+                        showtime = [];    
+                    })
+                    return screening;    
+                }
+            });
+
+            if(screenings && screenings.length > 0) {
+                seedScreening(screenings, "Fox Theatre", url);
+            } else {
+                seedTheatre("Fox Theatre", url);
+            }
+        } catch(err) {
+            seedErrorHandler(err, "Fox  Theatre", getFox, i);
+            return console.log("getFox completed scraping");
+        }
+    })();
+};  
+
+async function getCarlton(i) {
+    let url = "https://imaginecinemas.com/cinema/carlton-cinema/";
+
+    (async () => {
+        try {
+            const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+            const page = await browser.newPage();
+            await page.goto(url, { waitUntil: 'networkidle2' });
+
+            let screenings = await page.evaluate(() => {
+                let screening = [];
+                let showtime = [];
+
+                let films = document.querySelectorAll('.movie-showtime');
+
+                if(films.length) {
+                    Array.from(films).forEach(el => {                        
+                        let title = el.querySelector('.movie-title').innerText;
+                        let link = el.querySelector('.movie-performance').getAttribute('href');
+
+                        let times = el.querySelectorAll('.movie-performance');
+                        Array.from(times).forEach(elem => {
+                            showtime.push(elem.innerText);
+                        })
+
+                        screening.push({
+                            showtime, 
+                            link, 
+                            title
+                        })
+                        showtime = [];    
+                    })
+                    return screening;    
+                }
+            });
+
+            if(screenings && screenings.length > 0) {
+                seedScreening(screenings, "Carlton Cinema", url);
+            } else {
+                seedTheatre("Carlton Cinema", url);
+            }
+        } catch(err) {
+            seedErrorHandler(err, "Carlton  Theatre", getCarlton, i);
+            return console.log("getCarlton completed scraping");
+        }
+    })();
+};  
 
 module.exports = { 
     getRegent, 
@@ -381,5 +471,7 @@ module.exports = {
     getTiff, 
     getParadise, 
     getCinesphere, 
-    getHotDocs 
+    getHotDocs,
+    getFox,
+    getCarlton
 };
