@@ -113,34 +113,34 @@ async function getRevue(i) {
 
             let screenings = [];
 
-            $('.wpt_listing').each((i, el) => {
-                $(el).find('.wp_theatre_event').each((i, elem) => {
-                    let showtime = [];
-                    
-                    let link = $(elem)
-                        .find('.wp_theatre_event_title')
-                        .children('a')
-                        .attr('href')
-                        .replace(/\s\s+/g, '');
+            let today = $('#today');
 
-                    let title = $(elem)
-                        .find('.wp_theatre_event_title')
-                        .children('a')
-                        .text()
-                        .replace(/\s\s+/g, '');
+            $(today).find('.wp_theatre_event').each((i, elem) => {
+                let showtime = [];
+                
+                let link = $(elem)
+                    .find('.wp_theatre_event_title')
+                    .children('a')
+                    .attr('href')
+                    .replace(/\s\s+/g, '');
 
-                    let time = $(elem)
-                        .find('.wp_theatre_event_starttime')
-                        .text()
-                        .replace(/\s\s+/g, '');
-                    showtime.push(time)
+                let title = $(elem)
+                    .find('.wp_theatre_event_title')
+                    .children('a')
+                    .text()
+                    .replace(/\s\s+/g, '');
 
-                    screenings.push({
-                        title, 
-                        link,
-                        showtime
-                    })
-                });
+                let time = $(elem)
+                    .find('.wp_theatre_event_starttime')
+                    .text()
+                    .replace(/\s\s+/g, '');
+                showtime.push(time)
+
+                screenings.push({
+                    title, 
+                    link,
+                    showtime
+                })
             });
 
             if(screenings.length && screenings.length > 0) { 
