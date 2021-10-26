@@ -279,18 +279,19 @@ async function getTiff(i) {
                     let film = today.querySelectorAll('li');
 
                     Array.from(film).forEach(el => {
-                        let title = el.querySelector('.style__cardTitle____qWLh').innerText;
-                        let links = el.querySelector('.style__cardTitle____qWLh > a').getAttribute("href");
+                        let title = el.querySelector('.style__cardTitle___3rkLd').innerText;
+                        let links = el.querySelector('.style__cardTitle___3rkLd > a').getAttribute("href");
                         // let links = linkDiv.querySelector('.style__link___140bA').getAttribute("href");
                         let urLink = 'https://www.tiff.net';
                         let link = urLink + links;
+
                         // multiple showtimes so have to grab nodelist prior to looping through 
-                        let times = el.querySelectorAll('.style__screeningButton___36oFO');
+                        let times = el.querySelectorAll('.style__screeningButton___3rUW8');
                         Array.from(times).forEach(el => { 
                             showtime.push(el.innerText);
                         });
     
-                        if(title !== "!Toronto" && title !== "Film Reference Library Public Hours") {
+                        if(title !== "!Toronto" && title !== "Film Reference Library Open by Appointment" && title !== "TIFF Next Wave Presents: Open Screen") {
                             screening.push({
                                 title, 
                                 link,
@@ -400,7 +401,9 @@ async function getFox(i) {
                         })
                         showtime = [];    
                     })
-                    return screening;    
+                    if(title !== "Private Event") {
+                        return screening; 
+                    } 
                 }
             });
 
