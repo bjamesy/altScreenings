@@ -339,9 +339,9 @@ async function getCinesphere(i) {
                     .attr('title')
                     .replace(/\s\s+/g, '');
 
-                $(films).find('a').each((i, el) => {
+                $(films).find('.btn').each((i, el) => {
                     let time = $(el)
-                        .find('.btn')
+                        .find('a')
                         .text()
                         .replace(/\s\s+/g, '');
                     showtime.push(time);    
@@ -389,10 +389,10 @@ async function getFox(i) {
 
                 if(films.length) {
                     Array.from(films).forEach(el => {
-                        showtime.push(el.querySelector('.fc-list-event-time').innerText);
+                        showtime.push(el.querySelector('.fc-event-time').innerText);
                         
-                        let link = el.querySelector('.fc-list-event-title').firstElementChild.getAttribute('href');
-                        let title = el.querySelector('.fc-list-event-title').firstElementChild.innerText;  
+                        let link = el.querySelector('.fc-event-today').firstElementChild.getAttribute('href');
+                        let title = el.querySelector('.fc-event-title').firstElementChild.innerText;  
                         
                         screening.push({
                             showtime, 
