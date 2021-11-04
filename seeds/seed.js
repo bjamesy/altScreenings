@@ -385,25 +385,28 @@ async function getFox(i) {
                 let screening = [];
                 let showtime = [];
 
-                let films = document.querySelectorAll('.fc-event-today');
-
+                let today = document.querySelector('.fc-day-today');
+                let films = today.querySelectorAll('.fc-daygrid-event-harness');
+                
                 if(films.length) {
                     Array.from(films).forEach(el => {
-                        showtime.push(el.querySelector('.fc-event-time').innerText);
+                        let film = el.querySelectorAll('.fc-event-today').children;
+
+                        showtime.push(film.querySelector('.fc-event-time').innerText);
                         
-                        let link = el.querySelector('.fc-event-today').firstElementChild.getAttribute('href');
-                        let title = el.querySelector('.fc-event-title').firstElementChild.innerText;  
+                        let link = el.querySelector('.fc-event-today').getAttribute('href');
+                        let title = film.querySelector('.fc-event-title').innerText;  
                         
-                        screening.push({
-                            showtime, 
-                            link, 
-                            title
-                        })
-                        showtime = [];    
+                        if(title != "Private Event") {
+                            screening.push({
+                                showtime, 
+                                link, 
+                                title
+                            })
+                            showtime = [];    
+                        } 
                     })
-                    if(title !== "Private Event") {
-                        return screening; 
-                    } 
+                    return screening; 
                 }
             });
 
@@ -412,13 +415,14 @@ async function getFox(i) {
             } else {
                 seedTheatre("Fox Theatre", url);
             }
+
+            await browser.close();        
         } catch(err) {
             seedErrorHandler(err, "Fox  Theatre", getFox, i);
             return console.log("getFox completed scraping");
         }
     })();
 };  
-
 async function getCarlton(i) {
     let url = "https://imaginecinemas.com/cinema/carlton-cinema/";
 
@@ -460,6 +464,8 @@ async function getCarlton(i) {
             } else {
                 seedTheatre("Carlton Cinema", url);
             }
+
+            await browser.close();        
         } catch(err) {
             seedErrorHandler(err, "Carlton  Theatre", getCarlton, i);
             return console.log("getCarlton completed scraping");
