@@ -385,29 +385,33 @@ async function getFox(i) {
                 let screening = [];
                 let showtime = [];
 
-                let today = document.querySelector('.fc-day-today');
-                let films = today.querySelectorAll('.fc-daygrid-event-harness');
-                
-                if(films.length) {
-                    Array.from(films).forEach(el => {
-                        let film = el.querySelectorAll('.fc-event-today').children;
+                let today = document.querySelectorAll('.fc-day-today');
 
-                        showtime.push(film.querySelector('.fc-event-time').innerText);
-                        
-                        let link = el.querySelector('.fc-event-today').getAttribute('href');
-                        let title = film.querySelector('.fc-event-title').innerText;  
-                        
-                        if(title != "Private Event") {
-                            screening.push({
-                                showtime, 
-                                link, 
-                                title
-                            })
-                            showtime = [];    
-                        } 
-                    })
-                    return screening; 
-                }
+                Array.from(today).forEach(elem => {
+                    let films = elem.querySelectorAll('.fc-daygrid-event-harness');
+
+                    if(films.length) {
+                        Array.from(films).forEach(el => {
+                            let film = el.querySelector('.fc-event-today').children;
+    
+                            showtime.push(film.querySelector('.fc-event-time').innerText);
+                            
+                            let link = el.querySelector('.fc-event-today').getAttribute('href');
+                            let title = film.querySelector('.fc-event-title').innerText;  
+                            
+                            if(title !== "Private Event") {
+                                screening.push({
+                                    showtime, 
+                                    link, 
+                                    title
+                                })
+                                showtime = [];    
+                            } 
+                        })
+                    }   
+                })
+
+                return screening;     
             });
 
             if(screenings && screenings.length > 0) {

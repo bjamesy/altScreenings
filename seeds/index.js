@@ -8,7 +8,9 @@ const {
     getHotDocs,
     getRegent,
     getTiff,
-    getCinesphere
+    getCinesphere,
+    getFox,
+    getCarlton
 } = require('../seeds/seed');
 
   // SeedDB scraping all sites 
@@ -23,6 +25,8 @@ function seedDB() {
     getParadise(0);
     getRevue(0);
     getHotDocs(0);
+    getFox(0);
+    getCarlton(0);
 };
 
 module.exports = { seedDB }; 
