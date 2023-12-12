@@ -68,18 +68,16 @@ async function getParadise(i) {
             let screening = [];
             let showtime = [];
 
-            let today = document.querySelector('.current-day');
-            let shows = today.querySelectorAll('.film');
+            let today = document.querySelector('#day1');
+            let shows = today.querySelectorAll('.col-lg-5');
 
             Array.from(shows).forEach(el => {
-                let linkDirectory = el.querySelector('.event-link').getAttribute("href");
-                let linkUrl = "https://paradiseonbloor.com";
-                let link = linkUrl + linkDirectory;
+                let link = el.querySelector('.btn-primary').getAttribute("href");
 
-                let time = el.querySelector('.event-info');
-                showtime.push(time.querySelector('.list').innerText);
+                let time = el.querySelector('.event-date-time').innerText;
+                showtime.push(time);
 
-                let title = el.querySelector('h3[class="event-title"] > a').innerText;
+                let title = el.querySelector('h3[class="event-title"]').innerText;
 
                 screening.push({
                     title, 
@@ -98,14 +96,14 @@ async function getParadise(i) {
             seedTheatre("Paradise Theatre", url);
         } 
 
-        await browser.close();       
+        await browser.close();
     } catch(err) {
         seedErrorHandler(err, "Paradise", getParadise, i);
         return console.log("getParadise completed scraping");
     }
 };
 async function getRevue(i) {
-    let url = 'https://revuecinema.ca/';
+    let url = 'https://revuecinema.ca/schedule/';
 
     request(url, (err, res, html) => {
         if(!err && res.statusCode == 200) {
@@ -155,7 +153,7 @@ async function getRevue(i) {
     })          
 };
 async function getHotDocs(i) {
-    let url = 'http://hotdocscinema.ca/';
+    let url = 'https://hotdocs.ca/whats-on/watch-cinema';
 
     request(url, (err, res, html) => {
         if(!err && res.statusCode == 200) {
@@ -304,7 +302,6 @@ async function getTiff(i) {
 
                 return screening;    
             });
-
             if(screenings.length && screenings.length > 0) {
                 seedScreening(screenings, "Tiff Bell Lightbox", url);
             } else {
@@ -360,7 +357,7 @@ async function getCinesphere(i) {
                 })
                 showtime = [];
             }
-            
+
             if(screenings && screenings.length > 0) {
                 seedScreening(screenings, "Cinesphere Theatre", url);
             } else {
@@ -375,57 +372,55 @@ async function getCinesphere(i) {
 async function getFox(i) {
     let url = "http://www.foxtheatre.ca/schedule/";
 
-    (async () => {
-        try {
-            const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
-            const page = await browser.newPage();
-            await page.goto(url, { waitUntil: 'networkidle2' });
+    let screenings = [];
+    let showtime = [];
 
-            let screenings = await page.evaluate(() => {
-                let screening = [];
-                let showtime = [];
+    request(url, (err, res, html) => {
+        if(!err && res.statusCode == 200) {
+            const $ = cheerio.load(html);
 
-                let today = document.querySelectorAll('.fc-day-today');
+            let today = $('.fc-day-today');
 
-                Array.from(today).forEach(elem => {
-                    let films = elem.querySelectorAll('.fc-daygrid-event-harness');
+            $(today).find('.fc-daygrid-event-harness').each((i, el) => {
+                let link = $(el)
+                    // .find('.fc-event-today')
+                    // .attr('href')
+                    // .replace(/\s\s+/g, '');
+                    .children('a')
+                    .attr('href')
+                    .replace(/\s\s+/g, '');
 
-                    if(films.length) {
-                        Array.from(films).forEach(el => {
-                            let film = el.querySelector('.fc-event-today').children;
-    
-                            showtime.push(film.querySelector('.fc-event-time').innerText);
-                            
-                            let link = el.querySelector('.fc-event-today').getAttribute('href');
-                            let title = film.querySelector('.fc-event-title').innerText;  
-                            
-                            if(title !== "Private Event") {
-                                screening.push({
-                                    showtime, 
-                                    link, 
-                                    title
-                                })
-                                showtime = [];    
-                            } 
-                        })
-                    }   
-                })
+                let time = $(el).find('.fc-event-time')
+                showtime.push(time);
 
-                return screening;     
-            });
+                let title = $(el)
+                    .find('.fc-event-title')
+                    .text()
+                    .replace(/\s\s+/g, '');  
+            
+                if (title !== "Private Event") {
+                    screenings.push({
+                        showtime, 
+                        link, 
+                        title
+                    })
+                } 
+                showtime = [];    
+            })
 
-            if(screenings && screenings.length > 0) {
-                seedScreening(screenings, "Fox Theatre", url);
-            } else {
-                seedTheatre("Fox Theatre", url);
-            }
-
-            await browser.close();        
-        } catch(err) {
-            seedErrorHandler(err, "Fox  Theatre", getFox, i);
+        } else {
+            seedErrorHandler(err, "Fox Theatre", getFox, i);
             return console.log("getFox completed scraping");
         }
-    })();
+    })
+
+    console.log(screenings);
+    
+    if(screenings && screenings.length > 0) {
+        seedScreening(screenings, "Fox Theatre", url);
+    } else {
+        seedTheatre("Fox Theatre", url);
+    }
 };  
 async function getCarlton(i) {
     let url = "https://imaginecinemas.com/cinema/carlton-cinema/";

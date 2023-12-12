@@ -18,15 +18,15 @@ function seedDB() {
     // remove seeding
     deleteSeeds();
     // begin seeding
-    getCinesphere(0);
-    getRegent(0);
-    getTiff(0);
-    getRoyal(0);
-    getParadise(0);
-    getRevue(0);
-    getHotDocs(0);
+    // getCinesphere(0);
+    // getRegent(0);
+    // getTiff(0);
+    // getRoyal(0);
+    // getParadise(0);
+    // getRevue(0);
+    // getHotDocs(0);
     getFox(0);
-    getCarlton(0);
+    // getCarlton(0);
 };
 
 module.exports = { seedDB }; 
