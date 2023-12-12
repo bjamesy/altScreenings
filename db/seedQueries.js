@@ -43,13 +43,13 @@ module.exports =  {
     },
     async deleteSeeds() {
         try { 
-            let sql = 'DELETE FROM screening;';
+            let screeningSQL = 'DELETE FROM screening;';
             let theatreSQL = 'DELETE FROM theatre;';
-            const { rowCount } = await db.query(sql);
-            const result = await db.query(theatreSQL);
+            const { rowCount: screeningCount } = await db.query(screeningSQL)
+            const { rowCount: theatreCount } = await db.query(theatreSQL)
             
-            console.log('REMOVED theatre SEEDS: ', result.rowCount);
-            console.log('REMOVED SEEDS: ', rowCount);    
+            console.log('REMOVED theatre SEEDS: ', theatreCount);
+            console.log('REMOVED SEEDS: ', screeningCount);    
         } catch(err) {
             console.log('deleteSeed ERROR: ', err);
         }
